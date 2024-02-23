@@ -1,0 +1,19 @@
+import:
+	org.bukkit.event.player.PlayerResourcePackStatusEvent
+
+on join:
+	wait 1 second
+	while player is online:
+		if player don't have resource pack loaded:
+			if x-coordinate of player is between 120 and 121:
+				if z-coordinate of player is between -292.5 and -291.5:
+					set {_l} to location(121, 138, -291.5, world "world")
+					set {_v} to vector between {_l} and player
+					push player {_v} at speed 1
+					send title "&cНельзя!" with subtitle "&fУстановите &eтекстур пак&f!" to player for 1 second
+		wait 1 tick
+
+on damage:
+	if x-coordinate of victim is between 121 and 111:
+		if z-coordinate of victim is between -298 and -281:
+			cancel event

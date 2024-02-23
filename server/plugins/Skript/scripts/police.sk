@@ -1,0 +1,15 @@
+on right click on player:
+    if name of player's tool is "&fНаручники":
+        if {-p::%uuid of target player%::shocked} is true:
+            play sound "item.handcuffs.use" at player
+            teleport target player to location(187.5, 139, -255.5)
+
+on damage:
+    if name of attacker's tool is "&fТонфа":
+        if victim's health < 3:
+            cancel event
+            if {-p::%uuid of victim%::shocked} is not set:
+                set {-p::%uuid of victim%::shocked} to true
+                send title "&cВас оглушили" with subtitle "&r" to victim for 6 seconds
+                wait 6 second
+                clear {-p::%uuid of victim%::shocked}

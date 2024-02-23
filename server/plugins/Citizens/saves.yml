@@ -1,0 +1,62 @@
+# Citizens NPC Storage
+
+last-created-npc-id: 2
+npc:
+  '2':
+    metadata:
+      cached-skin-uuid-name: 87b36489-941b-49d2-bb7b-b888c7dc53f3
+      nameplate-visible: 'false'
+    name: Продавец
+    uuid: e3b639e4-e997-4d11-a2eb-e4f66197167c
+    traits:
+      mounttrait:
+        mountedon: 052269da-4b19-4073-a31c-2112cb276a56
+      type: PLAYER
+      spawned: true
+      skintrait:
+        fetchDefaultSkin: true
+        signature: IRX+17hFoJ9zdEpf0TRunP0us92lBeh5c03p2ZI5TaBejhbR24mWmYLNATQtaqAqr+SzT1FHr2VtTJtDXsDNGwe/g74eAmcag7lHN5lsm+2GNAj4uPvAHA4ciBxIjExWU8yfkb6SxcJR1LqKz3OzNsIxvfyCChM+H/DGl7m8waCcAUOivMa3yVv3o7iFde90Lw5m1FQG6c23I6MHTOqqTav8UvLjiDIqbYUecGPwEqc+jcoMKXWf/hZFS26rBkNBVvRnEd8w8VyxCyquZY/pvvqtmj6W16YceVbBc4qI6zAbfZDcy3SCoXTGISxLb9+v3frBhMxXUPb3l4glA6FK8DL2coXWNjYj7pcKg4YAzVHcdZdTRDiY71CV0jIuSQDYmtdKTxsL0oU21jjEVPJ8BZBQo0lOnENRTirIAWDFXWAknvjP7Xlzr1zUZpCz1MDZ5VcMkU4p/004g0bmwgvLMhqa+dkYYXruFTEvfQg8vSvOZobkrdNZNedFZ8BQCvVnouYXbjXYkRcooe/AT25Sma4nUrruWWSBcU3hDspwGw6QFyvJP/wK34VM5isSkCUSGqQWblkaBX1kUddSGPAtv62k+nC4RxoF8ycYVaiBEIFoEUVPAZLxL2xHBotyzZPpy4sfFR01xRy1Ne62nSzWSb6y5Uny62YVuBjXxbiyYk4=
+        skinName: 87b36489-941b-49d2-bb7b-b888c7dc53f3
+        textureRaw: ewogICJ0aW1lc3RhbXAiIDogMTU5MDIyODE1MzM1NCwKICAicHJvZmlsZUlkIiA6ICIzM2ViZDMyYmIzMzk0YWQ5YWM2NzBjOTZjNTQ5YmE3ZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJEYW5ub0JhbmFubm9YRCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNjZlYWE2YzQ1ZjNkMjU0ZDM1MmM0YWQ4YWQ3YjJhYTlhZmVhNzlkMTU3ZmRjNTBmYTQ2Y2E4YjcxNjFiYjY2IgogICAgfQogIH0KfQ==
+        updateSkins: false
+      sittrait:
+        sittingAt:
+          world: world
+          x: '21.4745'
+          y: '139.8'
+          z: '-290.4356'
+          yaw: '7.0832'
+          pitch: '90.0'
+      lookclose:
+        range: '10.0'
+        disablewhilenavigating: true
+        enabled: true
+        enableRandomLook: false
+        headonly: false
+        linkedbody: false
+        perplayer: false
+        randomLookDelay: 60
+        randomSwitchTargets: false
+        realisticlooking: false
+        targetnpcs: false
+        randomPitchRange:
+          '0': 0.0
+          '1': 0.0
+        randomYawRange:
+          '0': 0.0
+          '1': 360.0
+      owner:
+        uuid: a1b61644-846e-3163-813a-a4a4f5caf451
+      location:
+        bodyYaw: -58.0684
+        world: world
+        x: '21.4745'
+        y: '139.45'
+        z: '-290.4356'
+        yaw: '-58.0684'
+        pitch: '7.2336'
+    traitnames: owner,type,rotationtrait,inventory,lookclose,spawned,scoreboardtrait,mounttrait,location,skintrait,sittrait
+    navigator:
+      speedmodifier: '1.0'
+      avoidwater: false
+      usedefaultstuckaction: false

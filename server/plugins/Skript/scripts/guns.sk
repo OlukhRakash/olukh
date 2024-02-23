@@ -1,0 +1,300 @@
+command givegun [<player>] [<number>]:
+	trigger:
+		if player have permission "givegun":
+			if arg-1 is set:
+				if arg-1 is online:
+					if arg-2 is set:
+						set {_l} to "%statsBar(5)%"
+						if arg-2 = 1:
+							set {_i} to diamond hoe with all flags hidden named "&6ПМ" with lore "&7Наиболее распространенный в СНГ пистолет, наследие%nl%&7советской эпохи, ПМ - один из лучших представителей%nl%&7класса компактного оружия самообороны.%nl%%nl%&6• &fКалибр: &e9x18%nl%&6• &fПрочность: %{_l}%"
+							set custom model data of {_i} to arg-2
+							set {_n} to nbt compound of {_i}
+							set tag "tag;Damage" of {_n} to 4
+							set tag "tag;Reload" of {_n} to 0.5
+							set tag "tag;Firerate" of {_n} to 0.2
+							set tag "tag;Ammo" of {_n} to 8
+							set tag "tag;MaxAmmo" of {_n} to 8
+							set tag "tag;Spread" of {_n} to 0.1
+							set tag "tag;ReloadType" of {_n} to "single"
+							set tag "tag;AmmoType" of {_n} to "9x18"
+							set tag "tag;FireType" of {_n} to "Pistol"
+							set tag "tag;Speed" of {_n} to 3
+						else if arg-2 = 2:
+							set {_i} to diamond hoe with all flags hidden named "&6АПС" with lore "&7АПС - советское оружие, созданное в 1951 году для%nl%&7военных и правоохранительных органов. Он способен%nl%&7стрелять как одиночными, так и очередными выстрелами%nl%%nl%&6• &fКалибр: &e9x18%nl%&6• &fПрочность: %{_l}%"
+							set custom model data of {_i} to arg-2
+							set {_n} to nbt compound of {_i}
+							set tag "tag;Damage" of {_n} to 4
+							set tag "tag;Reload" of {_n} to 1
+							set tag "tag;Firerate" of {_n} to 0.1
+							set tag "tag;Ammo" of {_n} to 20
+							set tag "tag;MaxAmmo" of {_n} to 20
+							set tag "tag;Spread" of {_n} to 0.1
+							set tag "tag;ReloadType" of {_n} to "single"
+							set tag "tag;AmmoType" of {_n} to "9x18"
+							set tag "tag;FireType" of {_n} to "Pistol"
+							set tag "tag;Speed" of {_n} to 3
+						else if arg-2 = 3:
+							set {_i} to diamond hoe with all flags hidden named "&6АКС-74У" with lore "&7Укороченная модификация автомата АК-74,%nl%&7был разработан в конце 1970-х - начале%nl%&71980-х годов для вооружения экипажей%nl%&7боевых машин, авиатехники, расчетов орудий,%nl%&7а также десантников. Также он используется%nl%&7в МВД и охранных структурах благодаря%nl%&7своим небольшим размерам.%nl%%nl%&6• &fКалибр: &e5.45x39%nl%&6• &fПрочность: %{_l}%"
+							set custom model data of {_i} to arg-2
+							set {_n} to nbt compound of {_i}
+							set tag "tag;Damage" of {_n} to 6
+							set tag "tag;Reload" of {_n} to 1.5
+							set tag "tag;Firerate" of {_n} to 0.125
+							set tag "tag;Ammo" of {_n} to 30
+							set tag "tag;MaxAmmo" of {_n} to 30
+							set tag "tag;Spread" of {_n} to 1
+							set tag "tag;ReloadType" of {_n} to "single"
+							set tag "tag;AmmoType" of {_n} to "5.45x39"
+							set tag "tag;FireType" of {_n} to "Rifle"
+							set tag "tag;Speed" of {_n} to 4
+						else if arg-2 = 4:
+							set {_i} to diamond hoe with all flags hidden named "&6АК-74" with lore "&7Автомат Калашникова калибра 5.45 мм, разработанный%nl%&7в 1970 году конструктором М. Т. Калашниковым%nl%&7и принятый на вооружение вооруженных сил СССР в%nl%&71974 году. Является дальнейшим развитием АКМ.%nl%%nl%&6• &fКалибр: &e5.45x39%nl%&6• &fПрочность: %{_l}%"
+							set custom model data of {_i} to arg-2
+							set {_n} to nbt compound of {_i}
+							set tag "tag;Damage" of {_n} to 8
+							set tag "tag;Reload" of {_n} to 1.5
+							set tag "tag;Firerate" of {_n} to 0.125
+							set tag "tag;Ammo" of {_n} to 30
+							set tag "tag;MaxAmmo" of {_n} to 30
+							set tag "tag;Spread" of {_n} to 0.8
+							set tag "tag;ReloadType" of {_n} to "single"
+							set tag "tag;AmmoType" of {_n} to "5.45x39"
+							set tag "tag;FireType" of {_n} to "Rifle"
+							set tag "tag;Speed" of {_n} to 5
+						else if arg-2 = 5:
+							set {_i} to diamond hoe with all flags hidden named "&6ВСС «Винторез»"
+							set custom model data of {_i} to arg-2
+							set {_n} to nbt compound of {_i}
+							set tag "tag;Damage" of {_n} to 10
+							set tag "tag;Reload" of {_n} to 1.5
+							set tag "tag;Firerate" of {_n} to 0.1
+							set tag "tag;Ammo" of {_n} to 20
+							set tag "tag;MaxAmmo" of {_n} to 20
+							set tag "tag;Spread" of {_n} to 0.6
+							set tag "tag;ReloadType" of {_n} to "single"
+							set tag "tag;AmmoType" of {_n} to "9x39"
+							set tag "tag;FireType" of {_n} to "Rifle_Silenced"
+							set tag "tag;Speed" of {_n} to 6
+						set tag "tag;Durability" of {_n} to 6000
+						send "%{-sp}% &8» &fВы выдали игроку &a%arg-1% &fоружие с ID &6%arg-2%" to player
+						give nbt item of {_n} to arg-1
+						loop all items in arg-1's inventory:
+							if loop-item = diamond hoe:
+								repair loop-item
+
+on damage:
+	if projectile exists:
+		if metadata "Damage" of projectile is set:
+			cancel event
+			set {_dmg} to metadata value "Damage" of projectile / 2
+			set {_health} to health of victim
+			damage victim by 0
+			
+			set {_armor} to victim's generic armor final attribute 
+			set {_toughness} to victim's generic armor final attribute 
+
+			set {_newdmg} to {_dmg} * (1 - ((min(20, max({_armor} / 5, {_armor} - (({_dmg} * 4)/({_toughness} + 8))))) / 25))
+
+			if {_newdmg} is more than {_health}:
+				set health of victim to 0
+			else:
+				set the victim's health to {_health} - {_newdmg}
+			loop 20 times:
+				play nether wart block break 1 block above the victim
+			kill projectile
+
+on right click with diamond hoe:
+	cancel event
+	if custom model data of player's held item is 0:
+		stop
+	set {_n} to nbt compound of player's held item
+	set {_Type} to tag "tag;FireType" of {_n}
+	set {_Damage} to tag "tag;Damage" of {_n}
+	set {_Firerate} to tag "tag;Firerate" of {_n}
+	set {_Ammo} to tag "tag;Ammo" of {_n}
+	set {_slot} to player current hotbar slot id
+	set {_spread} to tag "tag;Spread" of {_n}
+	set {_ammotype} to tag "tag;AmmoType" of {_n}
+	set {_speed} to tag "tag;Speed" of {_n}
+	set {_durability} to tag "tag;Durability" of {_n}
+	if {_Type} is not set:
+		stop
+	if {_Damage} is not set:
+		stop
+	if {_Firerate} is not set:
+		stop
+	if {_Ammo} is not set:
+		stop
+	if {_spread} is not set:
+		stop
+	if player is sneaking:
+		set {_spread} to {_spread} / 10
+	if {-p::%uuid of player%::reloading} is true:
+		if tag "tag;ReloadType" of {_n} is "Single":
+			set {-p::%uuid of player%::reloading} to false
+		else:
+			stop
+	if {_durability} = 0:
+		play sound "item.guns.jam" at the player
+		stop
+	cancel event
+	set {_waited} to difference between {-p::%uuid of player%::lastshot} and now
+	if {_waited} is less than "%{_Firerate}% seconds" parsed as a timespan:
+		stop	
+	set {-p::%uuid of player%::lastshot} to now	
+	if {_Ammo} is less than 1:
+		play sound "block.stone_button.click_on" with volume 0.5 at the player 
+		stop
+	set {_loc1} to location 1.5 blocks above the player
+	set {_loc2} to location 1.5 blocks in front of {_loc1}
+	play cloud at {_loc2}
+	make the player shoot an arrow at speed {_speed}
+	if {_Type} = "Pistol":
+		play sound "item.guns.pistol.fire" at the player for all players
+	else if {_Type} = "Rifle":
+		play sound "item.guns.rifle.fire" at the player for all players
+	else if {_Type} = "Rifle_Silenced":
+		play sound "item.guns.rifle.silenced_fire" at the player for all players
+	set {_arrow} to last shot projectile
+	set metadata value "arrow" of {_arrow} to "Bullet"
+	set metadata value "Damage" of {_arrow} to {_Damage}
+	push {_arrow} upwards at speed (random number between {_spread} and {_spread} * -1)
+	set {_loc} to location 1 block to the right of the player
+	set {_v} to vector between player and {_loc}
+	push {_arrow} {_v} at speed (random number between {_spread} and {_spread} * -1)
+	remove 1 from {_Ammo}
+	set tag "tag;Ammo" of {_n} to {_Ammo}
+	remove 1 from {_durability}
+	set tag "tag;Durability" of {_n} to {_Durability}
+	set {_ch} to first character of "%{_Durability}%" parsed as number
+	loop 30 times:
+		add 1 to {_lc}
+		set {_lore} to line {_lc} of lore of player's held item
+		if {_lore} contains "Прочность":
+			exit loop
+	set {_statsbar} to "%statsBar({_ch})%"
+	set current hotbar slot of player to slot {_slot} of the player
+	set player's held item to nbt item of {_n}
+	set line {_lc} of lore of player's held item to "&6• &fПрочность: %{_statsBar}%"
+	send action bar "%{_Ammo}%" to the player
+	if tag "tag;FireType" of {_n} is "single":
+		set {_waittime} to {_Firerate} / 2
+		wait "%{_waittime}% seconds" parsed as a timespan
+		play sound "loadclick" with volume 2 and pitch 1 at the player
+
+on join:
+	while 1 is 1:
+		if {-p::%uuid of player%::reloading} is true:
+			set {_slot} to player current hotbar slot id
+			while {-p::%uuid of player%::reloading} is true:
+				set current hotbar slot of player to slot {_slot} of the player
+				wait 1 tick
+		wait 1 tick 
+
+on inventory click:
+	if {-p::%uuid of player%::reloading} is true:
+		cancel event
+
+on projectile hit:
+	if metadata value "arrow" of projectile is "Bullet":
+		play critical hit at the projectile
+		kill the projectile
+
+on drop:
+	if {-p::%uuid of player%::reloading} is true:
+		cancel event
+
+on swap item:
+	if custom model data of player's held item is 0:
+		stop
+	if player is holding diamond hoe:
+		cancel event
+		set {_n} to nbt compound of player's held item
+		set {_Type} to tag "tag;ReloadType" of {_n}
+		set {_GunType} to tag "tag;FireType" of {_n}
+		if {_Type} is not set:
+			stop
+		set {_item} to player's held item
+		set {_Reload} to tag "tag;Reload" of {_n}
+		set {_MaxAmmo} to tag "tag;MaxAmmo" of {_n}
+		set {_Ammo} to tag "tag;Ammo" of {_n}
+		set {_AmmoType} to tag "tag;AmmoType" of {_n}
+		set {_slot} to player current hotbar slot id
+		set {_i::*} to haveAmmo(player, "%{_AmmoType}%")
+		if {_i::1} is air:
+			stop
+		set {_ammo_in_box} to uncoloured line 1 of lore of {_i::1}
+		replace all "• В коробке " and " патронов" with "" in {_ammo_in_box}
+		set {_ammo_in_box} to {_ammo_in_box} parsed as number
+		if {_Reload} is not set:
+			stop
+		if {_MaxAmmo} is not set:
+			stop
+		if {_Ammo} is not set:
+			stop
+		if {_AmmoType} is not set:
+			stop
+		if {-p::%uuid of player%::reloading} is true:
+			cancel event
+			stop
+		else:
+			set {-p::%uuid of player%::reloading} to true
+		if {_Type} is "single":
+			cancel event
+			set {_Ammo} to tag "tag;Ammo" of {_n}
+			if {_Ammo} = {_MaxAmmo}:
+				stop
+			play sound "item.guns.loadslideout" at the player 
+			wait 10 ticks
+			if {_ammo_in_box} > {_MaxAmmo}:
+				if {_ammo} = 0:
+					set tag "tag;Ammo" of {_n} to {_MaxAmmo}
+					remove {_MaxAmmo} from {_ammo_in_box}
+					loop all items in player's inventory:
+						if {_i::1} = loop-item:
+							set lore of slot {_i::2} of player to "&6• &fВ коробке &6%{_ammo_in_box}% &fпатронов"
+				else if {_ammo} > 0:
+					set {_ammoreload} to {_MaxAmmo}-{_Ammo}
+					remove {_ammoreload} from {_ammo_in_box}
+					set tag "tag;Ammo" of {_n} to {_MaxAmmo}
+					loop all items in player's inventory:
+						if {_i::1} = loop-item:
+							set lore of slot {_i::2} of player to "&6• &fВ коробке &6%{_ammo_in_box}% &fпатронов"
+			else if {_ammo_in_box} = {_MaxAmmo}:
+				remove {_i::1} from player
+				set tag "tag;Ammo" of {_n} to {_MaxAmmo}
+			else if {_ammo_in_box} < {_MaxAmmo}:
+				set {_need} to {_MaxAmmo}-{_Ammo}
+				if {_ammo_in_box} > {_need}:
+					set {_ammoreload} to {_Ammo}+{_need}
+					remove {_need} from {_ammo_in_box}
+					set tag "tag;Ammo" of {_n} to {_ammoreload}
+					loop all items in player's inventory:
+						if {_i::1} = loop-item:
+							set lore of slot {_i::2} of player to "&6• &fВ коробке &6%{_ammo_in_box}% &fпатронов"
+				else if {_ammo_in_box} <= {_need}:
+					set {_ammoreload} to {_Ammo}+{_ammo_in_box}
+					remove {_i::1} from player
+					set tag "tag;Ammo" of {_n} to {_ammoreload}
+					loop all items in player's inventory:
+						if {_i::1} = loop-item:
+							if index of loop-item = {_slot_ammo}:
+								set lore of slot {_i::2} of player to "&6• &fВ коробке &6%{_ammo_in_box}% &fпатронов"
+			set current hotbar slot of player to slot {_slot} of the player
+			set player's held item to nbt item of {_n}
+			wait "%{_Reload}% seconds" parsed as a timespan
+			wait 1 tick
+			set {-p::%uuid of player%::reloading} to false
+			play sound "item.guns.loadslidein" at the player for all players
+			if {_GunType} contains "Pistol":
+				play sound "item.guns.pistol.cock" at the player for all players
+			else if {GunType} contains "Rifle":
+				play sound "item.guns.rifle.cock" at the player for all players
+			set {_Ammo} to tag "tag;Ammo" of {_n}
+			send action bar "%{_Ammo}%" to the player
+
+command ll:
+	trigger:
+		clear {-p::%uuid of player%::reloading}
+		give 1 of iron hoe with all flags hidden with custom model data 1 named "&69x18" with lore "&6• &fВ коробке &630 &fпатронов" to player
+		give 1 of iron hoe with all flags hidden with custom model data 2 named "&65.45x39" with lore "&6• &fВ коробке &690 &fпатронов" to player

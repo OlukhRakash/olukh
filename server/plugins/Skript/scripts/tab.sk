@@ -1,0 +1,9 @@
+on load:
+    set {-sp} to "<##ff512f>&lE<##fd592d>&ll<##fc612a>&li<##fa6928>&lt<##f87125>&le<##f77823>&lL<##f58020>&li<##f3881e>&lt<##f2901b>&le<##f09819>"
+
+on join:
+    set tablist header of player to "&r%nl%&6&l%{-sp}%%nl%&r"
+    while player is online:
+        set tablist footer of player to "&r%nl%&fОбщий онлайн: &a%size of all players%%nl%&r"
+        set the player's tab list name to "%{-p::%uuid of player%::prefix}% %{-p::%uuid of player%::name}% &8[%player%]"
+        wait 1 tick

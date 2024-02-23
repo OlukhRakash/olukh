@@ -1,0 +1,226 @@
+import:
+    java.lang.System
+    java.lang.Runtime
+    org.bukkit.inventory.PlayerInventory
+
+expression skull with value %string%:
+    get:
+        set {_nbt} to nbt compound from "{SkullOwner:{Id:[I;1,1,1,1],Properties:{textures:[{Value:""%expr-1%""}]}}}"
+        set {_item} to a player head with nbt {_nbt}
+        return {_item}
+
+expression %player% current hotbar slot id:
+    return type: number
+    get:
+        set {_p} to expr-1
+        set {_s} to {_p}.getInventory().getHeldItemSlot()
+        return {_s}
+
+function getRoleCount(r: string) :: number:
+    loop all players:
+        if {-p::%uuid of loop-player%::role} = {_r}:
+            add 1 to {_c}
+    if {_c} is set:
+        return {_c}
+    else:
+        return 0
+
+function getMoney(p: player) :: number:
+    loop all items in {_p}'s inventory:
+        set {_n} to uncoloured name of loop-item
+        if {_n} contains "рублей" or "рубль" or "рубля":
+            replace all " рублей" and " рубль" and " рубля" with "" in {_n}
+            set {_n} to {_n} parsed as number
+            add item amount of loop-item*{_n} to {_money}
+    if {_money} is set:
+        return {_money}
+    else:
+        return 0
+
+function removeMoney(p: player, s: number, i: item):
+    set {_w} to true
+    while {_w} is true:
+        if {_s} > 0:
+            loop all items in {_p}'s inventory:
+                if name of loop-item = "&f1 рубль":
+                    remove 1 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f2 рубля":
+                    remove 2 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f5 рублей":
+                    remove 5 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f10 рублей":
+                    remove 10 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f50 рублей":
+                    remove 50 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f100 рублей":
+                    remove 100 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f200 рублей":
+                    remove 200 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f500 рублей":
+                    remove 500 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f1000 рублей":
+                    remove 1000 from {_s}
+                    remove 1 of loop-item from {_p}
+                else if name of loop-item = "&f5000 рублей":
+                    remove 5000 from {_s}
+                    remove 1 of loop-item from {_p}
+        else if {_s} < 1:
+            set {_d} to "%{_s}%"
+            replace all "-" with "" in {_d}
+            set {_d} to {_d} parsed as number
+            giveMoney({_p}, {_d})
+            give {_i} to {_p}
+            clear metadata tag "buy" of {_p}
+            clear {_w}
+        wait 0.001 tick
+
+function giveMoney(p: player, s: number):
+    set {_w} to true
+    while {_w} is true:
+        if {_s} > 0:
+            if {_s} >= 5000:
+                give paper with custom model data 10 named "&f5000 рублей" to {_p}
+                remove 5000 from {_s}  
+            else if {_s} >= 1000:
+                if {_s} < 5000:
+                    give paper with custom model data 9 named "&f1000 рублей" to {_p}
+                    remove 1000 from {_s}
+            else if {_s} >= 500:
+                if {_s} < 1000:
+                    give paper with custom model data 8 named "&f500 рублей" to {_p}
+                    remove 500 from {_s}      
+            else if {_s} >= 200:
+                if {_s} < 500:
+                    give paper with custom model data 7 named "&f200 рублей" to {_p}
+                    remove 200 from {_s}
+            else if {_s} >= 100:
+                if {_s} < 200:
+                    give paper with custom model data 6 named "&f100 рублей" to {_p}
+                    remove 100 from {_s}
+            else if {_s} >= 50:
+                if {_s} < 100:
+                    give paper with custom model data 5 named "&f50 рублей" to {_p}
+                    remove 50 from {_s} 
+            else if {_s} >= 10:
+                if {_s} < 50:
+                    give paper with custom model data 4 named "&f10 рублей" to {_p}
+                    remove 10 from {_s}
+            else if {_s} >= 5:
+                if {_s} < 10:
+                    give paper with custom model data 3 named "&f5 рублей" to {_p}
+                    remove 5 from {_s}
+            else if {_s} >= 2:
+                if {_s} < 5:
+                    give paper with custom model data 2 named "&f2 рубля" to {_p}
+                    remove 2 from {_s}  
+            else if {_s} >= 1:
+                if {_s} < 2:
+                    give paper with custom model data 1 named "&f1 рубль" to {_p}
+                    remove 1 from {_s}  
+        else if {_s} = 0:
+            clear {_w}
+        wait 0.001 tick
+
+function digits(n: number) :: string:
+    return join (regex split "%{_n}%" by "(?<=\d)(?=(\d\d\d)+(?!\d))") by "."
+
+function haveAmmo(p: player, AmmoType: string) :: objects:
+    loop all items in {_p}'s inventory:
+        if name of loop-item = "&6%{_AmmoType}%":
+            if {_i} is not set:
+                set {_i} to loop-item
+                set {_slot} to index of loop-item
+            else if {_i} is set:
+                exit loop
+    if {_i} is not set:
+        add air to {_ammo::*}
+        add {_slot} to {_ammo::*}
+        return {_ammo::*}
+    else if {_i} is set:
+        add {_i} to {_ammo::*}
+        add {_slot} to {_ammo::*}
+        return {_ammo::*}
+        
+function saveData(p: player):
+	load yaml "data/players/%uuid of {_p}%.yml" as "data-%uuid of {_p}%"
+	set yaml value "name" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::name}
+	set yaml value "money" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::money}
+	set yaml value "donate" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::donate}
+	set yaml value "password" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::password}
+	set yaml value "ip" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::ip}
+	set yaml value "session" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::session}
+	set yaml value "discord_id" from "data-%uuid of {_p}%" to {-p::%uuid of {_p}%::discord_id}
+	save yaml "data-%uuid of {_p}%"
+
+function statsBar(i: integer) :: strings:
+    if {_i} <= 0:
+        return "&c&m⎯⎯⎯⎯⎯"
+    loop {_i} times:
+        set {_block} to "&a&m⎯"
+        add {_block} to {_bar::*}
+    loop 5 - size of {_bar::*} times:
+        add "&8&m⎯" to {_bar::*}
+    set {_bar} to "%{_bar::1}%%{_bar::2}%%{_bar::3}%%{_bar::4}%%{_bar::5}%"
+    return {_bar}
+	
+on quit:
+    loop all items in player's inventory:
+        set {_n} to nbt compound of loop-item
+        set {_nd} to tag "tag;NoDrop" of {_n}
+        if {_nd} = "true":
+            remove loop-item from player
+
+function giveItems(p: player):
+    if {-p::%uuid of {_p}%::role} = "police":
+        loop all items in {_p}'s inventory:
+            set {_n} to nbt compound of loop-item
+            set {_nd} to tag "tag;NoDrop" of {_n}
+            if {_nd} = "true":
+                remove loop-item from {_p}
+        set {_l} to "%statsBar(5)%"
+        set {_i} to diamond hoe with custom model data 1 with all flags hidden named "&6ПМ" with lore "&7Наиболее распространенный в СНГ пистолет, наследие%nl%&7советской эпохи, ПМ - один из лучших представителей%nl%&7класса компактного оружия самообороны.%nl%%nl%&6• &fКалибр: &e9x18%nl%&6• &fПрочность: %{_l}%"
+        set {_n} to nbt compound of {_i}
+        set tag "tag;Damage" of {_n} to 4
+        set tag "tag;Reload" of {_n} to 0.5
+        set tag "tag;Firerate" of {_n} to 0.2
+        set tag "tag;Ammo" of {_n} to 8
+        set tag "tag;MaxAmmo" of {_n} to 8
+        set tag "tag;Spread" of {_n} to 0.1
+        set tag "tag;ReloadType" of {_n} to "single"
+        set tag "tag;AmmoType" of {_n} to "9x18"
+        set tag "tag;FireType" of {_n} to "Pistol"
+        set tag "tag;Speed" of {_n} to 3
+        set tag "tag;NoDrop" of {_n} to "true"
+        set tag "tag;Durability" of {_n} to 6000
+        give nbt item of {_n} to {_p}
+        loop all items in {_p}'s inventory:
+            if loop-item = diamond hoe:
+                repair loop-item
+        set {_i} to shears with custom model data 1 with all flags hidden named "&fНаручники" with lore "%nl%&6ПКМ &f- заковать/расковать"
+        set {_n} to nbt compound of {_i}
+        set tag "tag;NoDrop" of {_n} to "true"
+        give nbt item of {_n} to {_p}
+        set {_i} to iron sword with custom model data 1 with all flags hidden named "&fТонфа"
+        set {_n} to nbt compound of {_i}
+        set tag "tag;NoDrop" of {_n} to "true"
+        give nbt item of {_n} to {_p}
+
+on drop:
+    set {_n} to nbt compound of event-item
+    set {_nd} to tag "tag;NoDrop" of {_n}
+    if {_nd} = "true":
+        cancel event
+
+function openMenu(p: player, m: string):
+	open {%{_m}%} to {_p}
+	
+on item damage:
+	cancel event

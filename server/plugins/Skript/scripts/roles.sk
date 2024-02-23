@@ -1,0 +1,70 @@
+on load:
+	set {role_menu} to chest inventory with 2 rows named "&8Роли"
+	set {_citizencount} to getRoleCount("citizen")
+	set {_policecount} to getRoleCount("police")
+	set slot 0 of {role_menu} to skull with value "ewogICJ0aW1lc3RhbXAiIDogMTY5OTIzMTE3NTg4OSwKICAicHJvZmlsZUlkIiA6ICJlNTE5NzUxYjIzMzQ0ZTExYjBhOTRiNzg1OGY0MTNlMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDdXJsaWVyVGh5bWU5NTciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg0ZTZiOTY0MzE4YmEzNWQwZGY0MDUzM2NlMGM5Y2M2ZjAzODNiYTNmMzY0OWUzYmIyNWZkMmUwOWI3NjBmMiIKICAgIH0KICB9Cn0=" named "&fĀ" with lore "&fЛимит: &6%{_citizencount}%/ထ%nl%%nl%&6• &fТипичный житель страны%nl%%nl%&6▶ &fНажмите, чтобы выбрать"
+	set slot 1 of {role_menu} to skull with value "ewogICJ0aW1lc3RhbXAiIDogMTcwNzA1NzA4ODA2MCwKICAicHJvZmlsZUlkIiA6ICI0NWRjNjlmYTIzNjE0OTdkYTQ3ZTI3MTg0ZGE2ZDlkMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJOZXNzeTE3IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzk1ZGMyZTFkODdkNTMxNjA4Mjc5ODFlNzU1NjY2NTBjMjFmMWM3NmZjNDUxMmI3NWE3ZDI2ODNiOGZiNmI0NGIiCiAgICB9CiAgfQp9" named "&fĂ" with lore "&fЛимит: &6%{_policecount}%/3%nl%%nl%&6• &fЗащитник правопорядка и невиновных%nl%%nl%&6▶ &fНажмите, чтобы выбрать"
+	open {_m} to {_p}
+	while {role_menu} is set:
+		set {_citizencount} to getRoleCount("citizen")
+		set {_policecount} to getRoleCount("police")
+		set line 1 of lore of slot 0 of {role_menu} to "&fЛимит: &6%{_citizencount}%/3"
+		set line 1 of lore of slot 1 of {role_menu} to "&fЛимит: &6%{_policecount}%/3"
+		wait 1 tick
+
+command roles:
+	aliases: role, job
+	trigger:
+		play sound "block.note_block.pling" to player
+		openMenu(player, "role_menu")
+
+
+on inventory click:
+	if event-inventory = {role_menu}:
+		cancel event
+		if event-slot is not air:
+			play sound "ui.button.click" to player
+			close player's inventory
+			if {-p::%uuid of player%::role_ban} is set:
+				set {_now} to now
+				if difference between {_now} and {-p::%uuid of player%::role_ban} < 3 minute:
+					send "%{-sp}% &8» &cПодождите немного, перед тем как снова изменить роль" to player
+					play sound "entity.villager.no" to player
+					close player's inventory
+					stop
+		if index of event-slot = 0:
+			if {-p::%uuid of player%::role} is not "citizen":
+				set {-p::%uuid of player%::role} to "citizen"
+				set {-p::%uuid of player%::prefix} to "Ā"
+				set {-p::%uuid of player%::color} to "00AB3C"
+				set {_role} to {-p::%uuid of player%::prefix}
+				send "%{-sp}% &8» &fВы выбрали роль: %{_role}%" to player
+				broadcast "%{-sp}% &8» &f%player% &7(%{-p::%uuid of player%::name}%)&f выбрал роль: %{_role}%"
+				giveItems(player)
+				setSkin(player, "HwFATuQoh+7vA/ofxl0dXNDMnoZ9uatQoD/exL+jeWtJ6ZYikg6s53fo877hdIDNPklxRJZOy3knuALyuBP2LCB8xvXF49C8FXCvf4G877HMIm02bTw1XE37EEIhodEbrKTLaAoliASf5aVsUFvINpICwatlm+XTk5NWUA1Fa8GuDrfH9jjxi4fcd28zO6mb8XFAA1jh5XH/Skbjq1uoKxdTEvQtA8pGTuFw7X0IVeBJtridJsJAkjZvbWTr4DIHK3w8+VSrZyhzbf86OmbQb4a2aVG1T5ezoXaVuIz451AfwIxK4g+FopBxRfguiYPeW1txq69hclE9ttbVqlfRpjXGridcobICNVTu8ebaO5xV0rOb0liGiXtDjHyqK/SSaYsg51llp51KRjBg2eUek0ewoVBPQMIyBip01DfEVxwi8ST+32l06E7SuQM482cEHg84plo1hhlaicywvJYYqgLECt/XuewOSBEGFzQc5MrNc6MNA4LxTavO7R9iDSsdX2oD/MEC2HtlQRanrUkKCuheCb1Ssbkf1VeCd+zOYBYfHS0aTvIg+WTjysXCgcWql9arxOHPgtydjdRIy2+9ObXRF1keyZK2duqUdu1Kd7Z7Mhcp8c6OQI9lsMe0CqpG9mt+eC5qYDRWN4TdsS2gESoz3s0H1d8H7Pa5z96vzUY=", "ewogICJ0aW1lc3RhbXAiIDogMTY5OTIzMTE3NTg4OSwKICAicHJvZmlsZUlkIiA6ICJlNTE5NzUxYjIzMzQ0ZTExYjBhOTRiNzg1OGY0MTNlMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDdXJsaWVyVGh5bWU5NTciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg0ZTZiOTY0MzE4YmEzNWQwZGY0MDUzM2NlMGM5Y2M2ZjAzODNiYTNmMzY0OWUzYmIyNWZkMmUwOWI3NjBmMiIKICAgIH0KICB9Cn0=")
+				draw 1 of explosion at player
+				set {-p::%uuid of player%::role_ban} to now
+			else if {-p::%uuid of player%::role} is "citizen":
+				send "%{-sp}% &8» &cУ вас уже выбрана данная роль" to player
+				play sound "entity.villager.no" to player
+		else if index of event-slot = 1:
+			if {-p::%uuid of player%::role} is not "police":
+				set {-p::%uuid of player%::role} to "police"
+				set {-p::%uuid of player%::prefix} to "Ă"
+				set {-p::%uuid of player%::color} to "0C00AD"
+				set {_role} to {-p::%uuid of player%::prefix}
+				send "%{-sp}% &8» &fВы выбрали роль: %{_role}%" to player
+				broadcast "%{-sp}% &8» &f%player% &7(%{-p::%uuid of player%::name}%)&f выбрал роль: %{_role}%"
+				giveItems(player)
+				setSkin(player, "qOUqaBIlWumNLRyY0HtRK4f8mgk8A7MEmy/onS3grMUz4ns80Dw0WwXBsIx3yYfQGKvp4cgAIt4xPpHxwKPMO8TkrX4ygmZSrLmnnYUdyCCqKD5P3r1IkqFFpde8Mg374gSLwNMiXavzMotrfkG0z1ZuQGrEq9S1JGZlh0TAaNgry7gy2DFG8t3JOgERSmMaQW3ProS7lnb+2JXwXuAs2XtTjx0VyZJ0/RMDZdVB6ISQR1T8MXQJLwVZXsPU1T2xj5eaySKryIsjsopG1QmgqykHn3ETALfkX5op2oOYT073H5rSXTakQGW561WE49MpdIrBMLbRtQeQL/rm2GnMRP1cAptndJxzECCdWVJ4M/NOsZT+ghCtyLsVQw9/gVkcZp3DcSOXjSEHhF2GFMXS34z6H8xL2k608Bp6yzNIv+0KwETpAEOtXK9OrqJD5slqo8Q6fFOpzz5hJbMpJYboh4fS12nhZ8dOETO5toqEq71r/R01O/XAWWK2fFsIitqAY7fb/ekkenoVFr8MqT/x6trJ7tMYGNDTNZAWF3uJEkykpv1zGJp+1h/y6Kvp1aTGJFGEPFRbdyQdGs5Cx5x+55lwPfljDFKFIWaJLAyAPwKBWsCE1F4ao1/S3TxKAVjOjrBPwcJeUTEAvId/+RhWH+C2VcRb4Tmf4132C9mOJu4=", "ewogICJ0aW1lc3RhbXAiIDogMTcwNzA1NzA4ODA2MCwKICAicHJvZmlsZUlkIiA6ICI0NWRjNjlmYTIzNjE0OTdkYTQ3ZTI3MTg0ZGE2ZDlkMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJOZXNzeTE3IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzk1ZGMyZTFkODdkNTMxNjA4Mjc5ODFlNzU1NjY2NTBjMjFmMWM3NmZjNDUxMmI3NWE3ZDI2ODNiOGZiNmI0NGIiCiAgICB9CiAgfQp9")
+				draw 1 of explosion at player
+				set {-p::%uuid of player%::role_ban} to now
+			else if {-p::%uuid of player%::role} is "police":
+				send "%{-sp}% &8» &cУ вас уже выбрана данная роль" to player
+				play sound "entity.villager.no" to player
+				
+on join:
+	teleport player to location(118.5, 138, -296.5, world "world", 0, 0)
+	set {-p::%uuid of player%::role} to "citizen"
+	set {-p::%uuid of player%::prefix} to "Ā"
+	set {-p::%uuid of player%::color} to "00AB3C"

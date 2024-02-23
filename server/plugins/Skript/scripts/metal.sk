@@ -1,0 +1,43 @@
+on right click:
+    if player's tool is stick:
+        add location of block to {-treasure_list::*}
+        set {_x} to x-coordinate of event-block
+        set {_y} to y-coordinate of event-block
+        set {_z} to z-coordinate of event-block
+        spawn armor stand at location({_x}, {_y}-2, {_z}, world "world") with nbt "{Invisible:1,NoGravity:1b}"
+        set {_e} to last spawned armor stand
+        set name of {_e} to "treasure"
+        set metadata tag "y" of {_e} to {_y}-0.910
+        set helmet of {_e} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTdlMmMwZGM2ZTQwYjM3NDUzMTRhODYwZjQ3OTgwYzJkYjg2MGM4ZDkwNDNjNmNlMjEzZDI3YTJkYWM4YzliMyJ9fX0="
+
+on right click:
+    if player's tool = any shovel:
+        if {-treasure_list::*} contains location of event-block:
+            loop all entities in radius 2 of event-block:
+                if loop-entity is armor stand:
+                    if name of loop-entity = "treasure":
+                        set {_x} to x-coordinate of loop-entity
+                        set {_y} to y-coordinate of loop-entity
+                        set {_z} to z-coordinate of loop-entity
+                        set {_yb} to y-coordinate of event-block
+                        if {_y} < {_yb}-1.099:
+                            play sound "item.shovel.flatten" at event-block
+                            teleport loop-entity to location({_x}, {_y}+0.273, {_z}, world "world")
+                    cancel event
+
+on right click on armor stand:
+    cancel event
+    send metadata tag "y" of event-entity to player
+    send y-coordinate of event-entity to player
+    if name of event-entity = "treasure":
+        set {_y} to y-coordinate of event-entity
+        set {_yb} to metadata tag "y" of event-entity
+        if {_y} >= {_yb}:
+            set {_e} to event-entity
+            set helmet of {_e} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjgwMzJjYWIyOTE4YjRiZGE4Njc3ZjRkY2YzZmFmZjViZmIxNGYxYjM2OWQ1NGFmNmVlZDVkODBiNmFlODg3MyJ9fX0="
+            play sound "block.chest.open" at event-entity
+            set name of {_e} to "treasure_opened"
+            set {_l} to random integer between 3 and 6
+            drop {_l} of iron ingot at {_e}
+            wait 3 second
+            kill {_e}

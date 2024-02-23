@@ -1,0 +1,175 @@
+import:
+    org.bukkit.event.player.PlayerMoveEvent
+
+on load:
+    loop {authtempban_list::*}:
+        clear {authtempban::%loop-value%}
+    clear {authtempban_list::*}
+
+on connect:
+    if length of player's name <= 3:
+        kick player due to "&cУ вас слишком короткий никнейм"
+    else if length of player's name > 16:
+        kick player due to "&cУ вас слишком длинный никнейм"
+    if player's name doesn't match "\w+":
+        kick player due to "&cВаш никнейм содержит запрещенные символы"
+    if {authtempban_list::*} contains player's ip:
+        kick player due to "&cВаш айпи заблокирован, за подозрительную активность%nl%&cЗайдите в Discord или дождитесь автоматической%nl%&cразблокировки через 15 минут%nl%%nl%&9discord.gg/CRcSU6g7vy"
+
+            
+every 1 minute:
+    set {_now} to now
+    loop {authtempban_list::*}:
+        if difference between {_now} and {authtempban::%loop-value%} > 15 minutes:
+            remove loop-value from {authtempban_list::*}
+            clear {authtempban::%loop-value%}
+            
+on PlayerMoveEvent:
+    set {_p} to event.getPlayer()
+    if {-p::%uuid of {_p}%::authorized} is not set:
+        cancel event
+    if {-p::%uuid of {_p}%::nologin} is set:
+        cancel event
+            
+on join:
+    loop 100 times:
+        send "&r" to player
+    wait 1 tick
+    if {-p::%uuid of player%::password} is set:
+        set {_now} to now
+        if difference between {-p::%uuid of player%::session} and {_now} < 1 hours:
+            if {-p::%uuid of player%::ip} = player's ip:
+                set {-p::%uuid of player%::authorized} to true
+                send "%{-sp}% &8» &fВы автоматически &aавторизовались&f!" to player
+                send resource pack from "https://download.mc-packs.net/pack/65b9cb6f9cc18333456902cc947f6523207861b2.zip" with hash "65b9cb6f9cc18333456902cc947f6523207861b2" to player
+                setSkin(player, "HwFATuQoh+7vA/ofxl0dXNDMnoZ9uatQoD/exL+jeWtJ6ZYikg6s53fo877hdIDNPklxRJZOy3knuALyuBP2LCB8xvXF49C8FXCvf4G877HMIm02bTw1XE37EEIhodEbrKTLaAoliASf5aVsUFvINpICwatlm+XTk5NWUA1Fa8GuDrfH9jjxi4fcd28zO6mb8XFAA1jh5XH/Skbjq1uoKxdTEvQtA8pGTuFw7X0IVeBJtridJsJAkjZvbWTr4DIHK3w8+VSrZyhzbf86OmbQb4a2aVG1T5ezoXaVuIz451AfwIxK4g+FopBxRfguiYPeW1txq69hclE9ttbVqlfRpjXGridcobICNVTu8ebaO5xV0rOb0liGiXtDjHyqK/SSaYsg51llp51KRjBg2eUek0ewoVBPQMIyBip01DfEVxwi8ST+32l06E7SuQM482cEHg84plo1hhlaicywvJYYqgLECt/XuewOSBEGFzQc5MrNc6MNA4LxTavO7R9iDSsdX2oD/MEC2HtlQRanrUkKCuheCb1Ssbkf1VeCd+zOYBYfHS0aTvIg+WTjysXCgcWql9arxOHPgtydjdRIy2+9ObXRF1keyZK2duqUdu1Kd7Z7Mhcp8c6OQI9lsMe0CqpG9mt+eC5qYDRWN4TdsS2gESoz3s0H1d8H7Pa5z96vzUY=", "ewogICJ0aW1lc3RhbXAiIDogMTY5OTIzMTE3NTg4OSwKICAicHJvZmlsZUlkIiA6ICJlNTE5NzUxYjIzMzQ0ZTExYjBhOTRiNzg1OGY0MTNlMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDdXJsaWVyVGh5bWU5NTciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg0ZTZiOTY0MzE4YmEzNWQwZGY0MDUzM2NlMGM5Y2M2ZjAzODNiYTNmMzY0OWUzYmIyNWZkMmUwOWI3NjBmMiIKICAgIH0KICB9Cn0=")
+            else if {-p::%uuid of player%::ip} != player's ip:
+                clear {-p::%uuid of player%::session}
+        else if difference between {-p::%uuid of player%::session} and {_now} > 1 hours:
+            send "%{-sp}% &8» &fВаша &eсессия&f недействительна, вам требуется снова &aввести &fсвой пароль" to player
+        set {_c} to 60
+        while player is online:
+            remove 1 from {_c}
+            send action bar "&fВремя на авторизацию истекает через: &6%{_c}% сек." to player
+            if {_c} <= 0:
+                kick player due to "&cВы не успели авторизоваться!"
+            if {-p::%uuid of player%::authorized} is not set:
+                send title "&6Авторизуйтесь" with subtitle "&d/login &f[пароль]" to player for 1 seconds
+            else if {-p::%uuid of player%::authorized} is set:
+                send action bar "&r" to player
+                exit loop
+            wait 1 second
+    else if {-p::%uuid of player%::password} is not set:
+        set {_c} to 60
+        while player is online:
+            remove 1 from {_c}
+            send action bar "&fВремя на регистрацию истекает через: &6%{_c}% сек." to player
+            if {_c} <= 0:
+                kick player due to "&cВы не успели зарегистрироваться!"
+            if {-p::%uuid of player%::authorized} is not set:
+                send title "&6Зарегистрируйтесь" with subtitle "&d/register &f[пароль] [повтор пароля]" to player for 1 seconds
+            else if {-p::%uuid of player%::authorized} is set:
+                send action bar "&r" to player
+                exit loop
+            wait 1 second
+    
+command login [<text>]:
+    aliases: l
+    trigger:
+        if {-p::%uuid of player%::nologin} is true:
+            stop
+        if {-p::%uuid of player%::password} is set:
+            if {-p::%uuid of player%::authorized} is not set:
+                if arg-1 is set:
+                    set {_password} to "%player%%arg-1%" hashed with SHA-256
+                    if {-p::%uuid of player%::password} = {_password}:
+                        if {-p::%uuid of player%::ip} = player's ip:
+                            send "%{-sp}% &8» &fВы &aуспешно &fавторизовались!" to player
+                            send title "&aПриятной игры!" with subtitle "&r" to player for 3 seconds
+                            set {-p::%uuid of player%::authorized} to true
+                            send resource pack from "https://download.mc-packs.net/pack/65b9cb6f9cc18333456902cc947f6523207861b2.zip" with hash "65b9cb6f9cc18333456902cc947f6523207861b2" to player
+                            setSkin(player, "HwFATuQoh+7vA/ofxl0dXNDMnoZ9uatQoD/exL+jeWtJ6ZYikg6s53fo877hdIDNPklxRJZOy3knuALyuBP2LCB8xvXF49C8FXCvf4G877HMIm02bTw1XE37EEIhodEbrKTLaAoliASf5aVsUFvINpICwatlm+XTk5NWUA1Fa8GuDrfH9jjxi4fcd28zO6mb8XFAA1jh5XH/Skbjq1uoKxdTEvQtA8pGTuFw7X0IVeBJtridJsJAkjZvbWTr4DIHK3w8+VSrZyhzbf86OmbQb4a2aVG1T5ezoXaVuIz451AfwIxK4g+FopBxRfguiYPeW1txq69hclE9ttbVqlfRpjXGridcobICNVTu8ebaO5xV0rOb0liGiXtDjHyqK/SSaYsg51llp51KRjBg2eUek0ewoVBPQMIyBip01DfEVxwi8ST+32l06E7SuQM482cEHg84plo1hhlaicywvJYYqgLECt/XuewOSBEGFzQc5MrNc6MNA4LxTavO7R9iDSsdX2oD/MEC2HtlQRanrUkKCuheCb1Ssbkf1VeCd+zOYBYfHS0aTvIg+WTjysXCgcWql9arxOHPgtydjdRIy2+9ObXRF1keyZK2duqUdu1Kd7Z7Mhcp8c6OQI9lsMe0CqpG9mt+eC5qYDRWN4TdsS2gESoz3s0H1d8H7Pa5z96vzUY=", "ewogICJ0aW1lc3RhbXAiIDogMTY5OTIzMTE3NTg4OSwKICAicHJvZmlsZUlkIiA6ICJlNTE5NzUxYjIzMzQ0ZTExYjBhOTRiNzg1OGY0MTNlMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDdXJsaWVyVGh5bWU5NTciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg0ZTZiOTY0MzE4YmEzNWQwZGY0MDUzM2NlMGM5Y2M2ZjAzODNiYTNmMzY0OWUzYmIyNWZkMmUwOWI3NjBmMiIKICAgIH0KICB9Cn0=")
+                        else if {-p::%uuid of player%::ip} != player's ip:
+                            if {-p::%uuid of player%::discord_id} is set:
+                                sendDiscordVerify(player)
+                                set {-p::%uuid of player%::authorized} to true
+                                set {-p::%uuid of player%::nologin} to true
+                                while player is online:
+                                    if {-p::%uuid of player%::nologin} is set:
+                                        send title "&cПодозрительная активность!" with subtitle "&fПодтвердите свой айпи в &9Discord" to player for 1 seconds
+                                    else if {-p::%uuid of player%::nologin} is not set:
+                                        exit loop
+                                    wait 1 second
+                            else if {-p::%uuid of player%::discord_id} is not set:
+                                send "%{-sp}% &8» &fВы &aуспешно &fавторизовались!" to player
+                                send title "&aПриятной игры!" with subtitle "&r" to player for 3 seconds
+                                set {-p::%uuid of player%::authorized} to true
+                                send resource pack from "https://download.mc-packs.net/pack/65b9cb6f9cc18333456902cc947f6523207861b2.zip" with hash "65b9cb6f9cc18333456902cc947f6523207861b2" to player
+                                setSkin(player, "HwFATuQoh+7vA/ofxl0dXNDMnoZ9uatQoD/exL+jeWtJ6ZYikg6s53fo877hdIDNPklxRJZOy3knuALyuBP2LCB8xvXF49C8FXCvf4G877HMIm02bTw1XE37EEIhodEbrKTLaAoliASf5aVsUFvINpICwatlm+XTk5NWUA1Fa8GuDrfH9jjxi4fcd28zO6mb8XFAA1jh5XH/Skbjq1uoKxdTEvQtA8pGTuFw7X0IVeBJtridJsJAkjZvbWTr4DIHK3w8+VSrZyhzbf86OmbQb4a2aVG1T5ezoXaVuIz451AfwIxK4g+FopBxRfguiYPeW1txq69hclE9ttbVqlfRpjXGridcobICNVTu8ebaO5xV0rOb0liGiXtDjHyqK/SSaYsg51llp51KRjBg2eUek0ewoVBPQMIyBip01DfEVxwi8ST+32l06E7SuQM482cEHg84plo1hhlaicywvJYYqgLECt/XuewOSBEGFzQc5MrNc6MNA4LxTavO7R9iDSsdX2oD/MEC2HtlQRanrUkKCuheCb1Ssbkf1VeCd+zOYBYfHS0aTvIg+WTjysXCgcWql9arxOHPgtydjdRIy2+9ObXRF1keyZK2duqUdu1Kd7Z7Mhcp8c6OQI9lsMe0CqpG9mt+eC5qYDRWN4TdsS2gESoz3s0H1d8H7Pa5z96vzUY=", "ewogICJ0aW1lc3RhbXAiIDogMTY5OTIzMTE3NTg4OSwKICAicHJvZmlsZUlkIiA6ICJlNTE5NzUxYjIzMzQ0ZTExYjBhOTRiNzg1OGY0MTNlMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDdXJsaWVyVGh5bWU5NTciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg0ZTZiOTY0MzE4YmEzNWQwZGY0MDUzM2NlMGM5Y2M2ZjAzODNiYTNmMzY0OWUzYmIyNWZkMmUwOWI3NjBmMiIKICAgIH0KICB9Cn0=")
+                    else if {-p::%uuid of player%::password} != {_password}:
+                        add 1 to {-p::%uuid of player%::attempts}
+                        send "%{-sp}% &8» &fВы ввели &cнеправильный пароль" to player
+                        if {-p::%uuid of player%::attempts} = 3:
+                            add player's ip to {authtempban_list::*}
+                            set {authtempban::%player's ip%} to now
+                            kick player due to "&cВы ввели неправильный пароль более трёх раз%nl%%nl%Теперь ваш аккаунт временно заблокирован на 15 минут"
+                else if arg-1 is not set:
+                    send "%{-sp}% &8» &cИспользование: /login [пароль]" to player
+            else if {-p::%uuid of player%::authorized} is set:
+                send "%{-sp}% &8» &cВы уже авторизованы" to player
+        else if {-p::%uuid of player%::password} is not set:
+            send "%{-sp}% &8» &cЗарегистрируйтесь на сервере, чтобы использовать эту команду!" to player
+                    
+command register [<text>] [<text>]:
+    aliases: reg
+    trigger:
+        if {-p::%uuid of player%::password} is not set:
+            if arg-1 is set:
+                if arg-2 is set:
+                    if arg-1 = arg-2:
+                        if length of arg-1 and arg-2 is between 8 and 32:
+                            set {-p::%uuid of player%::password} to "%player%%arg-1%" hashed with SHA-256
+                            set {-p::%uuid of player%::authorized} to true
+                            set {-p::%uuid of player%::ip} to player's ip
+                            send formatted "%{-sp}% &8» &fВы успешно &aзарегистрировались&f!%nl%Запишите ваш <tooltip:&6%arg-1%>&dпароль" to player
+                            send title "&aПриятной игры!" with subtitle "&r" to player for 3 seconds
+                            send resource pack from "https://download.mc-packs.net/pack/65b9cb6f9cc18333456902cc947f6523207861b2.zip" with hash "65b9cb6f9cc18333456902cc947f6523207861b2" to player
+                            setSkin(player, "HwFATuQoh+7vA/ofxl0dXNDMnoZ9uatQoD/exL+jeWtJ6ZYikg6s53fo877hdIDNPklxRJZOy3knuALyuBP2LCB8xvXF49C8FXCvf4G877HMIm02bTw1XE37EEIhodEbrKTLaAoliASf5aVsUFvINpICwatlm+XTk5NWUA1Fa8GuDrfH9jjxi4fcd28zO6mb8XFAA1jh5XH/Skbjq1uoKxdTEvQtA8pGTuFw7X0IVeBJtridJsJAkjZvbWTr4DIHK3w8+VSrZyhzbf86OmbQb4a2aVG1T5ezoXaVuIz451AfwIxK4g+FopBxRfguiYPeW1txq69hclE9ttbVqlfRpjXGridcobICNVTu8ebaO5xV0rOb0liGiXtDjHyqK/SSaYsg51llp51KRjBg2eUek0ewoVBPQMIyBip01DfEVxwi8ST+32l06E7SuQM482cEHg84plo1hhlaicywvJYYqgLECt/XuewOSBEGFzQc5MrNc6MNA4LxTavO7R9iDSsdX2oD/MEC2HtlQRanrUkKCuheCb1Ssbkf1VeCd+zOYBYfHS0aTvIg+WTjysXCgcWql9arxOHPgtydjdRIy2+9ObXRF1keyZK2duqUdu1Kd7Z7Mhcp8c6OQI9lsMe0CqpG9mt+eC5qYDRWN4TdsS2gESoz3s0H1d8H7Pa5z96vzUY=", "ewogICJ0aW1lc3RhbXAiIDogMTY5OTIzMTE3NTg4OSwKICAicHJvZmlsZUlkIiA6ICJlNTE5NzUxYjIzMzQ0ZTExYjBhOTRiNzg1OGY0MTNlMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDdXJsaWVyVGh5bWU5NTciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg0ZTZiOTY0MzE4YmEzNWQwZGY0MDUzM2NlMGM5Y2M2ZjAzODNiYTNmMzY0OWUzYmIyNWZkMmUwOWI3NjBmMiIKICAgIH0KICB9Cn0=")
+                        else if length of arg-1 and arg-2 is not between 8 and 32:
+                            send "%{-sp}% &8» &cДлина пароля должна быть от 8 до 32 символов!" to player
+                    else if arg-1 != arg-2:
+                        send "%{-sp}% &8» &cВведеные вами пароли не совпадают!" to player
+                else if arg-2 is not set:
+                    send "%{-sp}% &8» &cИспользование: /register [пароль] [повтор пароля]" to player
+            else if arg-1 is not set:
+                send "%{-sp}% &8» &cИспользование: /register [пароль] [повтор пароля]" to player
+        else if {-p::%uuid of player%::password} is set:
+            send "%{-sp}% &8» &cВы уже зарегистрированы" to player
+
+command changepassword [<text>]:
+    aliases: changepass
+    trigger:
+        if arg-1 is set:
+            if length of arg-1 is between 8 and 32:
+                set {_pass} to "%player%%arg-1%" hashed with SHA-256
+                if {_pass} != {-p::%uuid of player%::password}:
+                    set {-p::%uuid of player%::password} to "%player%%arg-1%" hashed with SHA-256
+                    send formatted "%{-sp}% &8» &fВы успешно поменяли пароль на <tooltip:%arg-1%>&dновый пароль" to player
+                else if {_pass} = {-p::%uuid of player%::password}:
+                    send formatted "%{-sp}% &8» &cУ вас уже установлен этот пароль!"
+            else if length of arg-1 is not between 8 and 32:
+                send "%{-sp}% &8» &cДлина пароля должна быть от 8 до 32 символов!" to player
+        else if arg-1 is not set:
+            send "%{-sp}% &8» &cИспользование: /changepassword [новый пароль]" to player
+            
+on drop:
+    if {-p::%uuid of player%::authorized} is not set:
+        cancel event
+    if {-p::%uuid of player%::nologin} is set:
+        cancel event
+        
+on pickup:
+    if {-p::%uuid of player%::authorized} is not set:
+        cancel event
+    if {-p::%uuid of player%::nologin} is set:
+        cancel event

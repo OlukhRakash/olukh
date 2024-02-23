@@ -1,0 +1,130 @@
+import:
+    eu.decentsoftware.holograms.api.DHAPI
+    eu.decentsoftware.holograms.event.HologramClickEvent
+
+on load:
+    loop all bounds:
+        clear owners of loop-bound
+        clear members of loop-bound
+
+on HologramClickEvent:
+    set {_p} to event.getPlayer()
+    set {_h} to event.getHologram().getName()
+    if {_h} contains "house":
+        play sound "block.note_block.pling" to {_p}
+        event.setCancelled(true)
+    set {_d::player} to {_p}
+    set {_d::string} to {_h}
+    call custom event "open_house_menu" with values {_d::*}
+
+event "open_house_menu":
+    pattern: open house menu
+    event-values: player, string
+
+on break:
+    cancel event
+
+on place:
+    if all bound ids at event-block is set:
+        if owners of bound with id "%all bound ids at event-block%" contains player:
+            add location of event-block to {-p::%uuid of player%::blocks::*}
+        else if owners of bound with id "%all bound ids at event-block%" doesn't contain player:
+            cancel event
+            if members of bound with id "%all bound ids at event-block%" contains player:
+                add location of event-block to {-p::%uuid of player%::blocks::*}
+            else if members of bound with id "%all bound ids at event-block%" doesn't contain player:
+                cancel event
+    else if all bound ids at event-block is not set:
+        cancel event
+
+on right click:
+    if player is sneaking:
+        if {-p::%uuid of player%::blocks::*} contains location of event-block:
+            drop event-block at event-block
+            set event-block to air
+            remove location of event-block from {-p::%uuid of player%::blocks::*}
+            play sound "entity.item.pickup" at event-block
+
+on open house menu:
+    set {_h} to event-string
+    set {_d} to event-string
+    replace all "house" with "" in {_d}
+    set {_house_menu} to chest inventory with 2 rows named "&8Дом %{_d}% | Апартаменты"
+    set {_s} to -1
+    set {_c} to 0
+    loop 12 times:
+        add 1 to {_s}
+        add 1 to {_c}
+        if owners of bound with id "%{_h}%-flat%{_c}%" is not set:
+            set slot {_s} of {_house_menu} to dark oak door named "&fКвартира &6№%{_c}%" with lore "%nl%&6• &fВладелец: &cнет%nl%&6• &fАйди: &6flat_%{_c}%%nl%%nl%&6▶ &fНажмите, чтобы арендовать за &a5.000₽"
+        else if owners of bound with id "%{_h}%-flat%{_c}%" is set:
+            set {_o::*} to owners of bound with id "%{_h}%-flat%{_c}%"
+            set slot {_s} of {_house_menu} to dark oak door named "&fКвартира &6№%{_c}%" with lore "%nl%&6• &fВладелец: &a%{_o::*}%%nl%&6• &fАйди: &6flat_%{_c}%%nl%%nl%"
+    open {_house_menu} to player
+    while current inventory of player = {_house_menu}:
+        set {_s} to -1
+        set {_c} to 0
+        loop 12 times:
+            add 1 to {_s}
+            add 1 to {_c}
+            if owners of bound with id "%{_h}%-flat%{_c}%" is not set:
+                set slot {_s} of {_house_menu} to dark oak door named "&fКвартира &6№%{_c}%" with lore "%nl%&6• &fВладелец: &cнет%nl%&6• &fАйди: &6flat_%{_c}%%nl%%nl%&6▶ &fНажмите, чтобы арендовать за &a5.000₽"
+            else if owners of bound with id "%{_h}%-flat%{_c}%" is set:
+                set {_o::*} to owners of bound with id "%{_h}%-flat%{_c}%"
+                set slot {_s} of {_house_menu} to dark oak door named "&fКвартира &6№%{_c}%" with lore "%nl%&6• &fВладелец: &a%{_o::*}%%nl%&6• &fАйди: &6flat_%{_c}%%nl%%nl%"
+        wait 1 tick
+
+
+on right click on any door:
+    if all bound ids at event-block is set:
+        if owners of bound with id "%all bound ids at event-block%" contains player:
+            stop
+        else if owners of bound with id "%all bound ids at event-block%" doesn't contain player:
+            if members of bound with id "%all bound ids at event-block%" contains player:
+                stop
+            else if members of bound with id "%all bound ids at event-block%" doesn't contain player:
+                if name of player's tool is not "&fОтмычка":
+                    cancel event
+                    send "%{-sp}% &8» &cУ вас нет ключей от этого помещения" to player
+
+on inventory click:
+    if name of event-inventory contains "Дом":
+        cancel event
+        if event-slot = dark oak door:
+            set {_l} to uncoloured line 5 of lore of event-slot
+            play sound "ui.button.click" to player
+            if {_l} is set:
+                replace all "▶ Нажмите, чтобы арендовать за " and "." and "₽" with "" in {_l}
+                set {_l} to {_l} parsed as integer
+                if {-p::%uuid of player%::money} >= {_l}:
+                    set {_n} to uncoloured name of event-slot
+                    set {_b} to uncoloured line 3 of lore of event-slot
+                    set {_h} to uncoloured name of event-inventory
+                    replace all "Дом " and " | Апартаменты" with "" in {_h}
+                    replace all "• Айди: flat_" with "" in {_b}
+                    set {_b} to {_b} parsed as integer
+                    set {_h} to {_h} parsed as integer
+                    replace all "Квартира " with "" in {_n}
+                    if size of {-p::%uuid of player%::bounds::*} < {-p::%uuid of player%::bounds_limit}:
+                        remove {_l} from {-p::%uuid of player%::money}
+                        send "%{-sp}% &8» &fВы арендровали квартиру &6%{_n}%" to player
+                        add player to owners of bound with id "house%{_h}%-flat%{_b}%"
+                        add "house%{_h}%-flat%{_b}%" to {-p::%uuid of player%::bounds::*}
+                    else if size of {-p::%uuid of player%::bounds::*} >= {-p::%uuid of player%::bounds_limit}:
+                        send "%{-sp}% &8» &cВаш лимит на аренду помещений заполнен. Купите VIP, чтобы расширить лимит." to player
+                        play sound "entity.villager.no" to player
+            else if {_l} is not set:
+                send "%{-sp}% &8» &cДанная квартира уже занята" to player
+                play sound "entity.villager.no" to player
+
+on bound enter:
+    if owners of bound with id "%id of event-bound%" contains player:
+        set player's gamemode to survival
+    if members of bound with id "%id of event-bound%" contains player:
+        set player's gamemode to survival
+
+on bound exit:
+    if owners of bound with id "%id of event-bound%" contains player:
+        set player's gamemode to adventure
+    if members of bound with id "%id of event-bound%" contains player:
+        set player's gamemode to adventure

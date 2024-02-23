@@ -1,0 +1,17 @@
+on right click on snow layer:
+	if {-p::%uuid of player%::snowball_cooldown} is set:
+		set {_n} to now
+		set {_t} to difference between {-p::%uuid of player%::snowball_cooldown} and {_n}
+		if {_t} < 1 seconds:
+			stop
+	set {-p::%uuid of player%::snowball_cooldown} to now
+	set event-block to air
+	loop 3 times:
+		play sound "block.snow.break" to player
+		wait 0.2 second
+	give snowball to player
+	
+on projectile collide:
+	if event-projectile is snowball:
+		apply potion of slowness without particles to event-entity for 3 seconds
+		apply potion of blindness without particles to event-entity for 3 seconds

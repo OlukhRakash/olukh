@@ -1,0 +1,27 @@
+import:
+	java.nio.file.Files
+	java.nio.file.Paths
+	java.nio.file.attribute.BasicFileAttributes
+
+command clearfiles:
+	trigger:
+		loop all files from file "data/players/":
+			set {_file} to Paths.get("%loop-value%")
+			set {_attr} to Files.readAttributes({_file}, BasicFileAttributes.class)
+			send difference between ({_attr}.lastModifiedTime().toMillis()/1000) and unix timestamp of now to player
+			if difference between ({_attr}.lastModifiedTime().toMillis()/1000) and unix timestamp of now is greater than 365*86400:
+				delete file "%loop-value%"
+				add 1 to {_c}
+		loop all files from file "world/playerdata/":
+			set {_file} to Paths.get("%loop-value%")
+			set {_attr} to Files.readAttributes({_file}, BasicFileAttributes.class)
+			send difference between ({_attr}.lastModifiedTime().toMillis()/1000) and unix timestamp of now to player
+			if difference between ({_attr}.lastModifiedTime().toMillis()/1000) and unix timestamp of now is greater than 365*86400:
+				delete file "%loop-value%"
+		loop all files from file "world/stats":
+			set {_file} to Paths.get("%loop-value%")
+			set {_attr} to Files.readAttributes({_file}, BasicFileAttributes.class)
+			send difference between ({_attr}.lastModifiedTime().toMillis()/1000) and unix timestamp of now to player
+			if difference between ({_attr}.lastModifiedTime().toMillis()/1000) and unix timestamp of now is greater than 365*86400:
+				delete file "%loop-value%"
+		send "%{-sp}% &8» &fОчистка успешно произведена. Было удалено данных &6%{_c}% &fигрок(-ов)" to player

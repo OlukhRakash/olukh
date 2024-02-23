@@ -1,0 +1,144 @@
+on right click with stone hoe:
+	if name of event-item = "&fТелефон":
+		if player don't have resource pack loaded:
+			stop
+		play sound "block.note_block.pling" to player
+		set {smartphone_menu} to chest inventory with 6 rows named "&8%time in world "world"%               5G+ /// &6⬆&a⬇ &850&e⚡"
+		set slot 0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 26, 35, 44, 53, 52, 51, 50, 49, 48, 47, 46, 45, 36, 27, 18, 9, 10, 11, 20, 19, 29, 28, 38, 37, 16, 15, 25, 24, 34, 33, 43, 42 of {smartphone_menu} to black stained glass pane named "&r" # @skignore
+		set {_money} to digits({-p::%uuid of player%::money})
+		set {_played} to placeholder "statistic_hours_played" from player
+		set slot 12 of {smartphone_menu} to player head named "&aПрофиль" with lore "&8Информация о вас%nl%%nl%&6• &fИмя и фамилия: &6%{-p::%uuid of player%::name}%%nl%&6• &fБанковский счет: &a%{_money}%₽%nl%&6• &fНаигранное время: &e%{_played}% час(а/ов)"
+		set slot 13 of {smartphone_menu} to skull with value "ewogICJ0aW1lc3RhbXAiIDogMTcwNzU5OTY1MTM4NSwKICAicHJvZmlsZUlkIiA6ICIyNDc2OWQ0ODM1MDU0N2JmYjg4OThiZTJlYzQ5ODZiMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJBaXJidXNfQTM4TyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9mYTJjNjM4OWY5MjRlMTFkZTdkODY4OGEzMDUwMjNjODgwYTkxMzhjNTljMGY5NTA2YjYyOGE1NmRjYThlZThkIgogICAgfQogIH0KfQ==" named "&eИнтернет" with lore "&8Всемирная паутина%nl%%nl%&6▶ &fНажмите, чтобы открыть" # @skignore
+		set slot 21 of {smartphone_menu} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWIwM2Y0Yzk4MDQ5ZjViNmI2OTMwZGNlZjNlODg5MWVmNTE2MzY0YTcxNDYzNmQ4ODk4N2M5NzdmMTNhYmVlNiJ9fX0=" named "&7Трудоустройство" with lore "&8Стабильный источник доходов%nl%%nl%&6▶ &fНажмите, чтобы открыть" # @skignore
+		set slot 22 of {smartphone_menu} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjQ5NzRlYzE5ZDQwZWVmOTJiMmU0YWUzMmFjN2I4NjQ2ZjM0ODljNTA4ZjUwYjE2ZjM4MzUyOTZlMmFkYTIifX19" named "&6Донат" with lore "&8Поддержка сервера%nl%%nl%&6▶ &fНажмите, чтобы открыть" # @skignore
+		open {smartphone_menu} to player
+		while name of player's current inventory contains "5G+":
+			set name of player's current inventory to "&8%time in world "world"%               5G+ /// &6⬆&a⬇ &850&e⚡"
+			wait 1 second
+
+on join:
+	if player don't have stone hoe named "&fТелефон" with all flags hidden with custom model data 1:
+		give stone hoe named "&fТелефон" with all flags hidden with custom model data 1 to player
+
+#on command:
+#	if executor is player:
+#		if player don't have resource pack loaded:
+#			if command is not "register" or "login":
+#				cancel event
+
+on inventory click:
+	if name of event-slot = "&fТелефон":
+		cancel event
+	if name of event-inventory contains "5G+":
+		cancel event
+		if event-slot is not black stained glass pane or air:
+			play sound "ui.button.click" to player
+		if index of event-slot = 13:
+			set {internet_menu} to chest inventory with 1 row named "&8Интернет"
+			set slot 0 of {internet_menu} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTZlYWZlZjk4MGQ2MTE3ZGFiZTg5ODJhYzRiNDUwOTg4N2UyYzQ2MjFmNmE4ZmU1YzliNzM1YTgzZDc3NWFkIn19fQ==" named "&9Государственный портал" with lore "&8Вся информация нужная гражданам%nl%%nl%&6▶ &fНажмите, чтобы открыть"
+			set slot 1 of {internet_menu} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjUyZWU0NzFhYWM4ZWEzM2MzMGFiMDEyY2Q4MjMzZTRlY2Q4NWJlMjk5NDdkYTkwYzNmNzBmNGUzMzliYWU3YSJ9fX0=" named "&6Оружейка.ru" with lore "&8Охотничий магазинчик%nl%%nl%&6▶ &fНажмите, чтобы открыть"
+			open {internet_menu} to player
+		else if index of event-slot = 21:
+			close player's inventory
+			openMenu(player, "role_menu")
+		else if index of event-slot = 22:
+			set {-p::%uuid of player%::donate_menu} to hopper inventory named "                &8Донат"
+			set slot 0 of {-p::%uuid of player%::donate_menu} to wooden hoe with all flags hidden with custom model data 1 named "&6ᴠɪᴘ | 1 месяц" with lore "&8Привилегия%nl%%nl%&fПри покупке вы получаете:%nl%&6• &fУвеличение зарплаты в &62x &fраз%nl%&6• &fОбход &cлимита&f ролей%nl%&6• &d9 доп. слотов&f в банковской ячейке%nl%&6• &fРоль в &9Discord%nl%&6• &eИконка&f привилегии возле ника%nl%&6• &fДоступ к &5цветовым кодам%nl%&6• &fУстановка бонусного &aденежного принтера%nl%&6• &fОтсутствие задержки на &aсмену ника/роли%nl%&6• &e&nПриоритетный&f слот подключения%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &e99⭐"
+			set slot 1 of {-p::%uuid of player%::donate_menu} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWZkMTA4MzgzZGZhNWIwMmU4NjYzNTYwOTU0MTUyMGU0ZTE1ODk1MmQ2OGMxYzhmOGYyMDBlYzdlODg2NDJkIn19fQ==" with all flags hidden with custom model data 1 named "&6Деньги" with lore "%nl%&6▶ &fНажмите, чтобы открыть"
+			set slot 0 of {-p::%uuid of player%::donate_menu} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGM2NDk1OTg1NjExZGIxYTZjMDJjZGUwZTljNzNjZTcyODliYzExYTIzMGU5MWY0YjZkYzg4MjVmMzM4OTc5In19fQ==" with all flags hidden with custom model data 1 named "&6Привилегии" with lore "%nl%&6▶ &fНажмите, чтобы открыть"
+			set slot 2, 3, 4 of {-p::%uuid of player%::donate_menu} to black stained glass pane named "&r"
+			open {-p::%uuid of player%::donate_menu} to player
+
+on inventory click:
+	if event-inventory = {internet_menu}:
+		cancel event
+		if event-slot is not air:
+			play sound "ui.button.click" to player
+		if index of event-slot = 0:
+			set metadata tag "goverment_portal" of player to hopper inventory named "&8Государственный портал"
+			set {_m} to metadata tag "goverment_portal" of player
+			if {mayor} is set:
+				set {_m} to {mayor} parsed as player
+				set {_name} to {-p::%uuid of {_m}%::name}
+				set slot 0 of {_m} to player head named "&6%{_name}%" with lore "&8Действующее лицо, исполняющее%nl%&8обязанности главы города%nl%%nl%&6• &fВремя приёма: &68:00-17:00"
+			else if {mayor} is not set:
+				set slot 0 of {_m} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE5OWIwNWI5YTFkYjRkMjliNWU2NzNkNzdhZTU0YTc3ZWFiNjY4MTg1ODYwMzVjOGEyMDA1YWViODEwNjAyYSJ9fX0=" named "&cНе имеется" with lore "&8Действующее лицо, исполняющее%nl%&8обязанности главы города%nl%%nl%&6• &fВремя приёма: &cнет"
+				set slot 1 of {_m} to skull with value "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTljNzY5MDgzMTYzZTlhZWJkOGVkNWQ2NmJlYmNiOWRmMjFjYWJhZTYzYmFhYWEwZDNhYmUxNDIwYTRhYjU4ZiJ9fX0=" named "&cЗаконодательство" with lore "&8Действующая законодательная база%nl%%nl%&6▶ &fНажмите, чтобы открыть"
+			open {_m} to player
+	else if event-inventory = {-p::%uuid of player%::donate_menu}:
+		cancel event
+		if event-slot is not black stained glass pane:
+			play sound "ui.button.click" to player
+		if index of event-slot = 0:
+			set {_d} to digits({-p::%uuid of player%::donate})
+			set {-p::%uuid of player%::donate_menu_groups} to hopper inventory named "        &8Донат | Баланс: &e%{_d}%⭐"
+			set slot 0 of {-p::%uuid of player%::donate_menu_groups} to wooden hoe with all flags hidden with custom model data 1 named "&6ᴠɪᴘ | 1 месяц" with lore "&8Привилегия%nl%%nl%&fПри покупке вы получаете:%nl%&6• &fУвеличение зарплаты в &62x &fраз%nl%&6• &fОбход &cлимита&f ролей%nl%&6• &d9 доп. слотов&f в банковской ячейке%nl%&6• &fРоль в &9Discord%nl%&6• &eПрефикс&f привилегии возле ника%nl%&6• &fДоступ к &5цветовым кодам%nl%&6• &fУстановка бонусного &aденежного принтера%nl%&6• &fОтсутствие задержки на &aсмену ника/роли%nl%&6• &e&nПриоритетный&f слот подключения%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &e99⭐"
+			set slot 1, 2, 3, 4 of {-p::%uuid of player%::donate_menu_groups} to black stained glass pane named "&r"
+			open {-p::%uuid of player%::donate_menu_groups} to player
+		else if index of event-slot = 1:
+			set {_d} to digits({-p::%uuid of player%::donate})
+			set {-p::%uuid of player%::donate_menu_money} to hopper inventory named "        &8Донат | Баланс: &e%{_d}%⭐"
+			set slot 1 of {-p::%uuid of player%::donate_menu_money} to wooden hoe with all flags hidden with custom model data 2 named "&610 тысяч рублей" with lore "&8Деньги%nl%%nl%&fПри покупке вы получаете:%nl%&6• &f10 тысяч рублей%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &e50⭐"
+			set slot 2 of {-p::%uuid of player%::donate_menu_money} to wooden hoe with all flags hidden with custom model data 3 named "&650 тысяч рублей" with lore "&8Деньги%nl%%nl%&fПри покупке вы получаете:%nl%&6• &f50 тысяч рублей%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &e100⭐"
+			set slot 3 of {-p::%uuid of player%::donate_menu_money} to wooden hoe with all flags hidden with custom model data 4 named "&6100 тысяч рублей" with lore "&8Деньги%nl%%nl%&fПри покупке вы получаете:%nl%&6• &f100 тысяч рублей%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &e150⭐"
+			set slot 0, 4 of {-p::%uuid of player%::donate_menu_money} to black stained glass pane named "&r"
+			open {-p::%uuid of player%::donate_menu_money} to player
+	else if event-inventory = {-p::%uuid of player%::donate_menu_groups}:
+		cancel event
+		if event-slot is not black stained glass pane:
+			play sound "ui.button.click" to player
+		if index of event-slot = 0:
+			set {_g} to placeholder "luckperms_inherited_groups" from player
+			set {_d} to digits({-p::%uuid of player%::donate})
+			if {_g} doesn't contain "vip":
+				if {-p::%uuid of player%::donate} >= 99:
+					remove 99 from {-p::%uuid of player%::donate}
+					broadcast "%{-sp}% &8» &fПользователь &e%player% &fприобрел донат: &6ᴠɪᴘ | 1 месяц"
+					send "%{-sp}% &8» &fВы приобрели донат: &6ᴠɪᴘ | 1 месяц" to player
+					execute console command "lp user %player% parent addtemp vip 1mo"
+				else if {-p::%uuid of player%::donate} < 99:
+					send "%{-sp}% &8» &cУ вас недостаточно средств" to player
+					play sound "entity.villager.no" to player
+			else if {_g} contains "vip":
+				send "%{-sp}% &8» &cУ вас уже есть эта привилегия" to player
+				play sound "entity.villager.no" to player
+		set name of current inventory of player to "        &8Донат | Баланс: &e%{_d}%⭐"
+		set {-p::%uuid of player%::donate_menu_groups} to current inventory of player
+	else if event-inventory = {-p::%uuid of player%::donate_menu_money}:
+		cancel event
+		if event-slot is not black stained glass pane:
+			play sound "ui.button.click" to player
+			set {_d} to digits({-p::%uuid of player%::donate})
+		if index of event-slot = 1:
+			if {-p::%uuid of player%::donate} >= 49:
+				remove 50 from {-p::%uuid of player%::donate}
+				broadcast "%{-sp}% &8» &fПользователь &e%player% &fприобрел донат: &610 тысяч рублей"
+				send "%{-sp}% &8» &fВы приобрели донат: &610 тысяч рублей" to player
+				add 10000 to {-p::%uuid of player%::money}
+			else if {-p::%uuid of player%::donate} < 50:
+				send "%{-sp}% &8» &cУ вас недостаточно средств" to player
+				play sound "entity.villager.no" to player
+		else if index of event-slot = 2:
+			if {-p::%uuid of player%::donate} >= 99:
+				remove 50 from {-p::%uuid of player%::donate}
+				broadcast "%{-sp}% &8» &fПользователь &e%player% &fприобрел донат: &650 тысяч рублей"
+				send "%{-sp}% &8» &fВы приобрели донат: &650 тысяч рублей" to player
+				add 50000 to {-p::%uuid of player%::money}
+			else if {-p::%uuid of player%::donate} < 100:
+				send "%{-sp}% &8» &cУ вас недостаточно средств" to player
+				play sound "entity.villager.no" to player
+		else if index of event-slot = 3:
+			if {-p::%uuid of player%::donate} >= 149:
+				remove 50 from {-p::%uuid of player%::donate}
+				broadcast "%{-sp}% &8» &fПользователь &e%player% &fприобрел донат: &6100 тысяч рублей"
+				send "%{-sp}% &8» &fВы приобрели донат: &6100 тысяч рублей" to player
+				add 100000 to {-p::%uuid of player%::money}
+			else if {-p::%uuid of player%::donate} < 150:
+				send "%{-sp}% &8» &cУ вас недостаточно средств" to player
+				play sound "entity.villager.no" to player
+		set name of current inventory of player to "        &8Донат | Баланс: &e%{_d}%⭐"
+		set {-p::%uuid of player%::donate_menu_money} to current inventory of player
+
+on drop:
+	if name of event-item = "&fТелефон":
+		cancel event

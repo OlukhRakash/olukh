@@ -1,0 +1,55 @@
+function refreshSkin(player: player):
+	set {_value} to {_player}'s skin value
+	set {_signature} to {_player}'s skin signature
+	if {_value} is not set:
+		set {_value} to ""
+	if {_signature} is not set:
+		set {_signature} to ""
+
+	set {_buffer} to empty buffer
+	write varint 4 to {_buffer}
+	write varint 1 to {_buffer}
+	write uuid (uuid of {_player}) to {_buffer}
+	set {_packetRemove} to create packet "PacketPlayOutPlayerInfo" with {_buffer}
+
+	set {_buffer} to empty buffer
+	write varint 0 to {_buffer}
+	write varint 1 to {_buffer}
+	write uuid (uuid of {_player}) to {_buffer}
+	
+	write string (name of {_player}) to {_buffer}
+	write varint 1 to {_buffer}
+	write string "textures" to {_buffer}
+	write string {_value} to {_buffer}
+	write boolean true to {_buffer}
+	write string {_signature} to {_buffer}
+
+	write varint {_player}.getGameMode().getValue() to {_buffer}
+	write varint {_player}'s ping to {_buffer}
+	if {_player}'s display name is set:
+		write boolean true to {_buffer}
+		set {_str} to "{""text"":""%{_player}'s display name%""}"
+		set {_strlen} to size of (bytes of {_str})
+		write byte {_strlen} to {_buffer}
+		write utf-8 {_str} to {_buffer}
+	else:
+		write boolean false to {_buffer}
+
+	set {_packetAdd} to create packet "PacketPlayOutPlayerInfo" with {_buffer}
+
+	send packet {_packetRemove}, {_packetAdd} to {_player}
+	{_player}.refreshPlayer()
+	loop all players:
+		loop-player is not {_player}
+		{_player} is visible for loop-player
+		hide {_player} from loop-value
+		reveal {_player} for loop-value
+
+function setSkin(p: player, s: string, v: string):
+	set {_p}'s skin value to {_v}
+	set {_p}'s skin signature to {_s}
+	refreshSkin({_p})
+
+function resetSkin(p: player):
+	delete {_p}'s skin properties
+	refreshSkin({_p})

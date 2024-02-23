@@ -1,0 +1,71 @@
+import:
+	net.citizensnpcs.api.event.NPCRightClickEvent
+	
+on load:
+	set {food_shop_menu} to chest inventory named "&8Продуктовый магазин"
+	set slot 0 of {food_shop_menu} to potion named "&cКока-кола" with all flags hidden with custom model data 1 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fВредный напиток с большим%nl%&fсодержанием сахара%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a250₽"
+	set slot 1 of {food_shop_menu} to potion named "&6Фанта" with all flags hidden with custom model data 2 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fВредный напиток с большим%nl%&fсодержанием сахара%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a250₽"
+	set slot 2 of {food_shop_menu} to potion named "&9Пепси" with all flags hidden with custom model data 3 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fВредный напиток с большим%nl%&fсодержанием сахара%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a250₽"
+	set slot 3 of {food_shop_menu} to potion named "&fВодка" with all flags hidden with custom model data 4 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fЛучший друг против%nl%&fдепрессии и радиации%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a500₽"
+	set slot 9 of {food_shop_menu} to potion named "&4Красное вино" with all flags hidden with custom model data 5 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fКрасное и насыщенное, вроде бы%nl%&fиз винограда...%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a1.000₽"
+	set slot 10 of {food_shop_menu} to potion named "&6Коньяк" with all flags hidden with custom model data 6 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fПод горький шоколад...%nl%&fПросто идеально%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a5.000₽"
+	set slot 11 of {food_shop_menu} to potion named "&eШампанское" with all flags hidden with custom model data 7 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fИгристое и освежающее, самое то%nl%&fна праздники%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a2.000₽"
+	set slot 5 of {food_shop_menu} to gunpowder named "&6Чипсы" with all flags hidden with custom model data 3 with nbt "{CustomPotionColor:16777215}" with lore "%nl%&6• &fВкусные снеки из отходов%nl%&fмусорных баков%nl%%nl%&6▶ &fНажмите, чтобы приобрести за &a300₽"
+	set slot 4, 13, 22 of {food_shop_menu} to black stained glass pane named "&r"
+	
+on NPCRightClickEvent:
+	set {_id} to event.getNPC().getId()
+	set {_p} to event.getClicker()
+	if {_id} = 2:
+		play sound "block.note_block.pling" to {_p}
+		openMenu({_p}, "food_shop_menu")
+
+on consume:
+	if name of event-item = "&cКока-кола":
+		apply night vision without any particles to player
+	else if name of event-item = "&6Фанта":
+		apply speed without any particles to player
+	else if name of event-item = "&9Пепси":
+		apply regeneration without any particles to player
+	else if name of event-item = "&fВодка":
+		apply regeneration of tier 2 without any particles to player
+		wait 30 second
+		apply slowness without any particles to player
+		apply nausea without any particles to player
+		apply blindness without any particles to player
+		apply wither without any particles to player
+	else if name of event-item = "&eШампанское":
+		apply slow falling without any particles to player
+	else if name of event-item = "&4Красное вино":
+		apply health boost without any particles to player
+		wait 5 second
+		apply mining fatigue without any particles to player
+	else if name of event-item = "&6Коньяк":
+		apply strength without any particles to player
+		wait 30 second
+		apply weakness without any particles to player
+
+on right click with gunpowder:
+	if name of event-item = "&6Чипсы":
+		remove event-item from player
+		give 3 of cookie with custom model data 1 named "&6Чипсинка" to player
+
+on inventory click:
+	if event-inventory = {food_shop_menu}:
+		cancel event
+		if event-slot is not barrier:
+			set {_l} to uncoloured line 5 of lore of event-slot
+			replace all "▶ Нажмите, чтобы приобрести за " and "₽" and "." with "" in {_l}
+			set {_l} to {_l} parsed as number
+			if getMoney(player) >= {_l}:
+				set {_i} to event-slot
+				clear line 5 of lore of {_i}
+				clear line 4 of lore of {_i}
+				removeMoney(player, {_l}, {_i})
+			else if getMoney(player) < {_l}:
+				send "%{-sp}% &8» &cУ вас недостаточно средств" to player
+				play sound "entity.villager.no" to player
+				set {_s} to event-slot
+				set event-slot to barrier named "&cУ вас недостаточно средств"
+				wait 0.5 second
+				set event-slot to {_s}

@@ -1,0 +1,22 @@
+command name [<string>] [<string>]:
+	aliases: setname
+	trigger:
+		if arg-1 is set:
+			if arg-2 is set:
+				if metadata tag "name_ban" of player is set:
+					set {_now} to now
+					if difference between {_now} and metadata tag "name_ban" of player < 3 minute:
+						send "%{-sp}% &8» &cПодождите немного, перед тем как снова изменить свое имя" to player
+						play sound "entity.villager.no" to player
+						stop
+				set {-p::%uuid of player%::name} to "%uncoloured arg-1% %uncoloured arg-2%"
+				send "%{-sp}% &8» &fВы поменяли имя на: &6%{-p::%uuid of player%::name}%" to player
+				set name of metadata tag "name_player" of player to {-p::%uuid of player%::name}
+				play sound "entity.experience_orb.pickup" to player
+				set metadata tag "name_ban" of player to now
+			else if arg-2 is not set:
+				send "%{-sp}% &8» &cИспользование: /name [имя] [фамилия]" to player
+				play sound "entity.villager.no" to player
+		else if arg-1 is not set:
+			send "%{-sp}% &8» &cИспользование: /name [имя] [фамилия]" to player
+			play sound "entity.villager.no" to player

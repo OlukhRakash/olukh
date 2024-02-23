@@ -1,0 +1,40 @@
+on join:
+	load yaml "data/players/%uuid of player%.yml" as "data-%uuid of player%"
+	set {-p::%uuid of player%::name} to yaml value "name" from "data-%uuid of player%"
+	set {-p::%uuid of player%::money} to yaml value "money" from "data-%uuid of player%"
+	set {-p::%uuid of player%::donate} to yaml value "donate" from "data-%uuid of player%"
+	set {-p::%uuid of player%::password} to yaml value "password" from "data-%uuid of player%"
+	set {-p::%uuid of player%::ip} to yaml value "ip" from "data-%uuid of player%"
+	set {-p::%uuid of player%::session} to yaml value "session" from "data-%uuid of player%"
+	set {-p::%uuid of player%::discord_id} to yaml value "discord_id" from "data-%uuid of player%"
+	unload yaml "data-%uuid of player%"
+	if {-p::%uuid of player%::name} is not set:
+		set {_names::*} to "Евгений", "Константин", "Дмитрий", "Александр", "Сергей", "Александр", "Алексей", "Иван", "Ринат", "Владимир", "Даниил", "Павел"
+		set {_surnames::*} to "Павлов", "Дровин", "Хачатин", "Мишустин", "Хохлов", "Иванов", "Кузнецов", "Смирнов", "Попов", "Зайцев", "Соколов", "Яковлев", "Гусев", "Ильин", "Виноградов"
+		set {_name} to random element out of {_names::*}
+		set {_surname} to random element out of {_surnames::*}
+		set {-p::%uuid of player%::name} to "%{_name}% %{_surname}%"
+	if {-p::%uuid of player%::money} is not set:
+		set {-p::%uuid of player%::money} to 5000
+	if {-p::%uuid of player%::donate} is not set:
+		set {-p::%uuid of player%::donate} to 0
+	if {-p::%uuid of player%::bounds_limit} is not set:
+		set {_g} to placeholder "luckperms_inherited_groups" from player
+		if {_g} doesn't contain "vip":
+			set {-p::%uuid of player%::bounds_limit} to 2
+		else if {_g} contains "vip":
+			set {-p::%uuid of player%::bounds_limit} to 3
+	
+on disconnect:
+	if {-p::%uuid of player%::authorized} is true:
+		set {-p::%uuid of player%::session} to now
+	loop {-p::%uuid of player%::blocks::*}:
+		set block at loop-value to air
+	loop {-p::%uuid of player%::bounds::*}:
+		
+	saveData(player)
+	clear {-p::%uuid of player%::*}
+	
+on world save:
+	loop all players:
+		saveData(loop-player)

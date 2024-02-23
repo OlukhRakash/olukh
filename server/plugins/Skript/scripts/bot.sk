@@ -1,0 +1,160 @@
+define new bot named "Раб": 
+	token: "MTIwNjM0OTIwNzkzNDYwMzMxNg.GvFaom.8ygieL6Z6HvC_yGOyCijwuZwYX5Bdb2pnwFN4c"
+	intents: default intents
+	policy: all
+	auto reconnect: true
+	compression: none
+	on guild ready:
+		set {_link} to new slash command named "link" with description "Подтвердить свой аккаунт"
+		add new required integer option named "код" with description "Код для верификации" to options of {_link}
+		set {_info} to new slash command named "info" with description "Узнать информацию об игроке"
+		add new string option named "игрок" with description "Игрок" to options of {_info}
+		set {_online} to new slash command named "online" with description "Посмотреть онлайн на сервере"
+		add {_online}, {_link}, {_info} to {_cmd::*}
+		update {_cmd::*} locally in event-guild
+		set the presence of the bot named "Раб" to playing "ебать, хули я черный?"
+
+on slash command:
+	set {_name} to event-string
+	if {_name} is "link":
+		load yaml "data/discord/%discord id of event-member%.yml" as "discord-%discord id of event-member%"
+		set {-d::%discord id of event-member%::username} to yaml value "username" from "discord-%discord id of event-member%"
+		set {_code} to argument "код" as integer
+		if {-code::%{_code}%} is not set:
+			reply with ":x: Неизвестный код"
+		if {-d::%discord id of event-member%::username} is not set:
+			set {-d::%discord id of event-member%::username} to {-code::%{_code}%}
+			set {-p::%uuid of {-code::%{_code}%}%::discord_id} to discord id of event-member
+			reply with ":white_check_mark: Вы привязали свой аккаунт к **%{-code::%{_code}%}%**"
+			set nickname of event-member to "%{-code::%{_code}%}%"
+			remove uuid of {-code::%{_code}%} from {-verifylist::*}
+			set yaml value "username" from "discord-%discord id of event-member%" to {-d::%discord id of event-member%::username}
+			save yaml "discord-%discord id of event-member%"
+			clear {-d::%discord id of event-member%::*}
+		else if {-d::%discord id of event-member%::username} is set:
+			reply with ":x: Ваш аккаунт уже привязан"
+		unload yaml "discord-%discord id of event-member%"
+	else if {_name} is "info":
+		set {_p} to argument "игрок" as string
+		if {_p} is set:
+			set {_p} to {_p} parsed as offlineplayer
+			if {_p} is online:
+				set {_money} to digits({-p::%uuid of {_p}%::money})
+				set {_donate} to digits({-p::%uuid of {_p}%::donate})
+				make embed:
+					set title of embed to "Информация об игроке %{_p}%"
+					set description of embed to ":bust_in_silhouette: Имя и фамилия: **%{-p::%uuid of {_p}%::name}%**%nl%:credit_card: Банковский счет: **%{_money}%₽**%nl%:stars: Донатный счет: **%{_donate}%⭐**"
+					set embed color of embed to green
+				reply with last embed
+			else if {_p} is not online:
+				set {_uuid} to uuid of {_p}
+				loop all files from file "data/players/":
+					add loop-value to {_list::*}
+				if {_list::*} doesn't contain "%{_uuid}%.yml":
+					reply with ":x: Данный игрок не заходил на сервер"
+					stop
+				load yaml "data/players/%{_uuid}%.yml" as "data-%{_uuid}%"
+				set {_name} to yaml value "name" from "data-%{_uuid}%"
+				set {_donate} to digits(yaml value "donate" from "data-%{_uuid}%")
+				set {_money} to digits(yaml value "money" from "data-%{_uuid}%")
+				make embed:
+					set title of embed to "Информация об игроке %{_p}%"
+					set description of embed to ":bust_in_silhouette: Имя и фамилия: **%{_name}%**%nl%:credit_card: Банковский счет: **%{_money}%₽**%nl%:stars: Донатный счет: **%{_donate}%⭐**"
+					set embed color of embed to green
+				reply with last embed
+				unload yaml "data-%{_uuid}%"
+		else if {_p} is not set:
+			load yaml "data/discord/%discord id of event-member%.yml" as "discord-%discord id of event-member%"
+			set {-d::%discord id of event-member%::username} to yaml value "username" from "discord-%discord id of event-member%"
+			if {-d::%discord id of event-member%::username} is not set:
+				reply with ":x: Ваш Discord не привязан к аккаунту"
+				stop
+			set {_uuid} to uuid of {-d::%discord id of event-member%::username}
+			load yaml "data/players/%{_uuid}%.yml" as "data-%{_uuid}%"
+			set {_name} to yaml value "name" from "data-%{_uuid}%"
+			set {_donate} to digits(yaml value "donate" from "data-%{_uuid}%")
+			set {_money} to digits(yaml value "money" from "data-%{_uuid}%")
+			make embed:
+				set title of embed to "Ваша информация"
+				set description of embed to ":bust_in_silhouette: Имя и фамилия: **%{_name}%**%nl%:credit_card: Банковский счет: **%{_money}%₽**%nl%:stars: Донатный счет: **%{_donate}%⭐**"
+				set embed color of embed to green
+			reply with last embed
+			unload yaml "data-%{_uuid}%"
+			unload yaml "discord-%discord id of event-member%"
+			clear {-d::%discord id of event-member%::*}
+	else if {_name} = "online":
+		reply with "**Онлайн**: `%amount of all players%`"
+			
+on button click:
+	load yaml "data/discord/%discord id of event-user%.yml" as "discord-%discord id of event-user%"
+	set {_p} to yaml value "username" from "discord-%discord id of event-user%"
+	if discord id of event-button is "allow":
+		make embed:
+			set title of embed to "Доступ разрешен"
+			set description of embed to "Вы разрешили этому айпи адресу зайти на ваш аккаунт"
+			set embed color of embed to green
+		reply with last embed
+		purge {-d::%discord id of event-user%::verify_msg}
+		clear {-d::%discord id of event-user%::verify_msg}
+		set {-p::%uuid of {_p}%::discord_verify} to true
+		set {-p::%uuid of {_p}%::authorized} to true
+		clear {-p::%uuid of {_p}%::nologin}
+		send "%{-sp}% &8» &fВход &aразрешен" to {_p}
+		send resource pack from "https://download.mc-packs.net/pack/636dc6930fecc5c9088a6c1f348ceb9ef748e2c2.zip" with hash "636dc6930fecc5c9088a6c1f348ceb9ef748e2c2" to {_p}
+	else if discord id of event-button is "ban":
+		make embed:
+			set title of embed to "Вы запретили доступ к аккаунту"
+			set description of embed to "Вы запретили доступ к аккаунту указанному айпи адресу"
+			set embed color of embed to red
+		reply with last embed
+		add {_p}'s ip to {authtempban_list::*}
+		set {authtempban::%ip of {_p}%} to now
+		kick {_p} due to "&cВы замечены за подозрительной активностью%nl%%nl%Теперь ваш айпи временно заблокирован на 15 минут"
+		
+function sendDiscordVerify(p: player):
+	send "%{-sp}% &8» &fЗамечена &cподозрительная активность&f! Подтвердите свой &6айпи&f адрес через &9Discord" to {_p}
+	set {_id} to {-p::%uuid of {_p}%::discord_id}
+	set {_m} to member with id "%{_id}%" in guild with id "1167564286676181002"
+	open private channel of {_m} and store it in {_channel}
+	if {_channel} is not set:
+		send "%{-sp}% &8» &cВам необходимо открыть свои личные сообщения в Discord, чтобы получить сообщение с верификацией!" to {_p}
+	else:
+		set {_buttons} to new components row
+		add new success button with url "allow" named "Разрешить вход" with reaction "white_check_mark" to components of {_buttons}
+		add new danger button with url "ban" named "Заблокировать айпи" with reaction "door" to components of {_buttons}
+		make embed:
+			set title of embed to "Подозрительная активность!"
+			set description of embed to "В ваш аккаунт был совершен вход с айпи адреса %ip of {_p}%%nl%Вы подверждаете, что это ваш айпи?"
+			set footer of embed to "Игрок будет кикнут автоматически через одну минуту"
+			set embed color of embed to red
+		post message last embed with components {_buttons} to {_channel} and store it in {-d::%{_id}%::verify_msg}
+		wait 1 minute
+		purge {-d::%{_id}%::verify_msg}
+		clear {-d::%{_id}%::verify_msg}
+		if {-p::%uuid of {_p}%::discord_verify} is not set:
+			kick {_p} due to "&cВы не успели подтвердить свой айпи адрес"
+	
+command link:
+	trigger:
+		if {-p::%uuid of player%::discord_id} is not set:
+			if {-verifylist::*} doesn't contain uuid of player:
+				while {_codework} is not set:
+					set {_code} to a random integer between 11111 and 99999
+					if {-code::%{_code}%} is not set:
+						set {-code::%{_code}%} to player
+						send formatted "%{-sp}% &8» &fВаш код: &e%{_code}%&f. Зайдите в наш <link:https://discord.com/XK6u5q4JEE><tooltip:&fклик>&9Discord &fи введите команду: &e/link %{_code}%" to player
+						add uuid of player to {-verifylist::*}
+						set {_codework} to true
+					wait 1 tick
+				wait 1 minute
+				delete {-code::%{_code}%}
+				remove uuid of player from {-verifylist::*}
+				if {-p::%uuid of player%::discord_id} is not set:
+					send "%{-sp}% &8» &cСрок действия вашего кода истек" to player
+					play sound "entity.villager.no" to player
+			else if {-verifylist::*} contains uuid of player:
+				send "%{-sp}% &8» &cВы уже сгенерировали код. Дождитесь пока текущий код истечет или воспользуйтесь им." to player
+				play sound "entity.villager.no" to player
+		else:
+			send "%{-sp}% &8» &cВаш аккаунт уже привязан" to player
+			play sound "entity.villager.no" to player

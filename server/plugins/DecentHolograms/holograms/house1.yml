@@ -1,0 +1,16 @@
+location: world:9.500:141.000:-335.500
+enabled: true
+display-range: 25
+update-range: 48
+update-interval: 20
+facing: 0.0
+down-origin: false
+pages:
+- lines:
+  - content: Ą
+    height: 0.3
+  - content: '&fАйди: &6house_1'
+    height: 0.3
+  - content: '&6▶ &fНажмите, чтобы открыть'
+    height: 0.3
+  actions: {}

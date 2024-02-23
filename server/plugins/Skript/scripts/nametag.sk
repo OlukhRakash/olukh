@@ -1,0 +1,161 @@
+import:
+	org.bukkit.scoreboard.ScoreboardManager
+	org.bukkit.scoreboard.NameTagVisibility
+	org.bukkit.Bukkit
+	org.bukkit.entity.EntityType
+
+options:
+  radius_of_visibility: 5 #in blocks
+
+function showNameTag(for: player, of: entity, name: text):
+	# spawn slime
+	set {_buffer} to empty buffer
+	write varint 0 to {_buffer}
+	write UUID random uuid to {_buffer}
+
+	write varint 75 to {_buffer}
+
+	write double {_of}'s x coord to {_buffer}
+	write double 0 to {_buffer}
+	write double {_of}'s z coord to {_buffer}
+
+	write angle 0 to {_buffer}
+	write angle 0 to {_buffer}
+
+	write int 0 to {_buffer}
+
+	write short 0 to {_buffer}
+	write short 0 to {_buffer}
+	write short 0 to {_buffer}
+
+	set {_packetSpawnSlime} to create packet "PacketPlayOutSpawnEntityLiving" with {_buffer}
+
+	# spawn armorstand
+	set {_buffer} to empty buffer
+	write varint 1 to {_buffer}
+	write UUID random uuid to {_buffer}
+
+	write varint 1 to {_buffer}
+
+	write double {_of}'s x coord to {_buffer}
+	write double 0 to {_buffer}
+	write double {_of}'s z coord to {_buffer}
+
+	write angle 0 to {_buffer}
+	write angle 0 to {_buffer}
+
+	write int 0 to {_buffer}
+
+	write short 0 to {_buffer}
+	write short 0 to {_buffer}
+	write short 0 to {_buffer}
+
+	set {_packetSpawnArmorstand} to create packet "PacketPlayOutSpawnEntity" with {_buffer}
+	
+	# set slime ride on player
+	set {_buffer} to empty buffer
+	write varint ({_of}'s entity id) to {_buffer} #player id
+	write var int 1 to {_buffer} # count of passengers
+	write varint 0 to {_buffer}
+	set {_packetRideSlimeOnPlayer} to create packet "PacketPlayOutMount" with {_buffer}
+	
+	# set armorstand ride on slime
+	set {_buffer} to empty buffer
+	write varint 0 to {_buffer}
+	write var int 1 to {_buffer} # count of passengers
+	write varint 1 to {_buffer}
+	set {_packetRideArmorstandOnPlayer} to create packet "PacketPlayOutMount" with {_buffer}
+
+	# set metadata packet for size - 1 of slime
+	set {_buffer} to empty buffer
+	write varint 0 to {_buffer}
+
+	# make invisible
+	write byte 0 to {_buffer}
+	write varint 0 to {_buffer}
+	write byte 32 to {_buffer}
+
+	# slime size -1
+	write byte 15 to {_buffer}
+	write varint 1 to {_buffer}
+	write varint -2 to {_buffer}
+
+	#end of metadata
+	write byte -1 to {_buffer}
+
+	set {_packetMetadataSlime} to create packet "PacketPlayOutEntityMetadata" with {_buffer}
+
+	# set metadata for armostand
+	set {_buffer} to empty buffer
+	write varint 1 to {_buffer}
+
+	# make invisible
+	write byte 0 to {_buffer}
+	write varint 0 to {_buffer}
+	write byte 32 to {_buffer}
+
+	# armor stand based metadata
+	write byte 14 to {_buffer}
+	write varint 0 to {_buffer}
+	write byte 0x5 to {_buffer}
+
+	# custom name
+	write byte 2 to {_buffer}
+	write varint 5 to {_buffer}
+	write boolean true to {_buffer}
+
+	#nbt string tag
+	set {_str} to "{""text"":""%{_name}%""}"
+	set {_strlen} to size of (bytes of {_str})
+	write byte {_strlen} to {_buffer}
+	write utf-8 {_str} to {_buffer}
+
+	# custom name visibility
+	write byte 3 to {_buffer}
+	write varint 7 to {_buffer}
+	write boolean true to {_buffer}
+
+	#end of metadata
+	write byte -1 to {_buffer}
+
+	set {_packetMetadataArmorstand} to create packet "PacketPlayOutEntityMetadata" with {_buffer}
+	send packet {_packetSpawnSlime},{_packetSpawnArmorstand},{_packetRideSlimeOnPlayer},{_packetRideArmorstandOnPlayer},{_packetMetadataSlime},{_packetMetadataArmorstand} to {_for}
+
+function hideNameTag(player: player):
+	set {_buffer} to empty buffer
+	write varint 2 to {_buffer}
+	write varint 0 to {_buffer}
+	write varint 1 to {_buffer}
+	set {_packet} to create packet "PacketPlayOutEntityDestroy" with {_buffer}
+	send packet {_packet} to {_player}
+
+on load:
+  set {-vanilla::sm} to Bukkit.getScoreboardManager()
+  set {-vanilla::sb} to {-vanilla::sm}.getMainScoreboard()
+
+on join with priority HIGHEST:
+  set {_team} to {-vanilla::sb}.registerNewTeam(name of player)
+  {_team}.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OTHER_TEAMS)
+  {_team}.addPlayer(player)
+
+on disconnect with priority HIGHEST:
+  {-vanilla::sb}.getTeam(name of player).unregister()
+
+on join:
+  while player is online:
+    wait 1 tick
+    set {_target} to target entity of player
+    {_target} is set
+    if all players doesn't contain target:
+      stop loop
+    {_target}.getType() is EntityType.PLAYER
+    distance between player and {_target} is less than {@radius_of_visibility}
+    showNameTag(player, {_target}, "%{-p::%uuid of {_target}%::name}%")
+    while player is online:
+      wait 2 ticks
+      if target entity of player is not {_target}:
+        hideNameTag(player)
+        stop loop
+      distance between player and {_target} is greater than or equal to {@radius_of_visibility}:
+        hideNameTag(player)
+        stop loop

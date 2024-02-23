@@ -1,0 +1,285 @@
+# This file will save all bounds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bounds:
+  house1-flat1:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: 12
+    y1: 138
+    z1: -334
+    x2: 25
+    y2: 142
+    z2: -328
+    id: house1-flat1
+    owners: []
+    members: []
+  house1-flat2:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: 12
+    y1: 138
+    z1: -324
+    x2: 25
+    y2: 142
+    z2: -318
+    id: house1-flat2
+    owners: []
+    members: []
+  house1-flat3:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: -7
+    y1: 138
+    z1: -334
+    x2: 6
+    y2: 142
+    z2: -328
+    id: house1-flat3
+    owners: []
+    members: []
+  house1-flat4:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: -7
+    y1: 138
+    z1: -324
+    x2: 9
+    y2: 142
+    z2: -318
+    id: house1-flat4
+    owners: []
+    members: []
+  house1-flat5:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: 12
+    y1: 143
+    z1: -334
+    x2: 25
+    y2: 147
+    z2: -328
+    id: house1-flat5
+    owners: []
+    members: []
+  house1-flat6:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: 12
+    y1: 143
+    z1: -324
+    x2: 25
+    y2: 147
+    z2: -318
+    id: house1-flat6
+    owners: []
+    members: []
+  house1-flat7:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: -7
+    y1: 143
+    z1: -334
+    x2: 6
+    y2: 147
+    z2: -328
+    id: house1-flat7
+    owners: []
+    members: []
+  house1-flat8:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: -7
+    y1: 143
+    z1: -324
+    x2: 6
+    y2: 147
+    z2: -318
+    id: house1-flat8
+    owners: []
+    members: []
+  house1-flat9:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: 12
+    y1: 148
+    z1: -334
+    x2: 25
+    y2: 151
+    z2: -328
+    id: house1-flat9
+    owners: []
+    members: []
+  house1-flat10:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: 12
+    y1: 148
+    z1: -324
+    x2: 25
+    y2: 151
+    z2: -318
+    id: house1-flat10
+    owners: []
+    members: []
+  house1-flat11:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: -7
+    y1: 148
+    z1: -334
+    x2: 6
+    y2: 151
+    z2: -328
+    id: house1-flat11
+    owners: []
+    members: []
+  house1-flat12:
+    ==: com.shanebeestudios.skbee.elements.bound.objects.Bound
+    world: world
+    x1: -7
+    y1: 148
+    z1: -324
+    x2: 6
+    y2: 151
+    z2: -318
+    id: house1-flat12
+    owners: []
+    members: []
